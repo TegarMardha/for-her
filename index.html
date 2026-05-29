@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hai, Lunar 💫</title>
+    <title>Untuk Kamu ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         body {
@@ -36,7 +36,7 @@
         /* --- HEADER DI ATAS TENGAH --- */
         h1 {
             position: absolute;
-            top: 8%; /* Sedikit dinaikkan agar tidak menabrak kotak portrait */
+            top: 10%; /* Dikembalikan ke 10% */
             width: 100%;
             color: #ff4757; 
             font-size: 2.5em;
@@ -46,16 +46,14 @@
             letter-spacing: 2px;
         }
 
-        /* --- CONTAINER BULAN (SEKARANG BENTUK PORTRAIT CARD) --- */
+        /* --- CONTAINER BULAN (KEMBALI BULAT SEMPURNA) --- */
         .moon-container {
             width: 85vw;
             max-width: 380px;
             
-            /* Rasio Portrait (Tinggi > Lebar) */
-            aspect-ratio: 3 / 4; 
-            
-            /* Sudut melengkung halus seperti kartu/layar HP */
-            border-radius: 30px; 
+            /* Dikembalikan ke bentuk lingkaran */
+            aspect-ratio: 1 / 1; 
+            border-radius: 50%; 
             
             background-image: url('bulan.png'); 
             background-size: cover;
@@ -113,7 +111,7 @@
         <source src="background.mp4" type="video/mp4">
     </video>
 
-    <h1>Hai, Lunar 💫</h1>
+    <h1>Hai, Lunar 🖤</h1>
 
     <div class="moon-container" onclick="handleMoonClick()">
         <div id="message"></div>
@@ -138,4 +136,62 @@
             "Aku selalu bangga punya kamu.",
             "Inget ya, aku di sini selalu dukung kamu.",
             "Setiap detik tanpamu terasa sangat lama.",
-            "
+            "Aku sudah siapkan banyak pelukan saat kita bertemu nanti."
+            // Tambahkan terus sampai 500 kalimat...
+        ];
+
+        let pertamaKaliKlik = true;
+
+        function dapatkanPesanHariIni() {
+            const hariIni = new Date();
+            const seedString = hariIni.getFullYear().toString() + hariIni.getMonth().toString() + hariIni.getDate().toString();
+            let seed = parseInt(seedString);
+            
+            let x = Math.sin(seed++) * 10000;
+            const indexHariIni = Math.floor((x - Math.floor(x)) * pesan.length);
+            return pesan[indexHariIni];
+        }
+
+        function handleMoonClick() {
+            const musik = document.getElementById('bg-music');
+            const video = document.getElementById('bg-video');
+            if (musik && musik.paused) musik.play();
+            if (video && video.paused) video.play();
+
+            const messageElement = document.getElementById('message');
+
+            if (pertamaKaliKlik) {
+                messageElement.innerText = dapatkanPesanHariIni();
+                messageElement.style.opacity = 1;
+                pertamaKaliKlik = false;
+            } else {
+                const indexRandom = Math.floor(Math.random() * pesan.length);
+                messageElement.style.opacity = 0;
+                setTimeout(() => {
+                    messageElement.innerText = pesan[indexRandom];
+                    messageElement.style.opacity = 1;
+                }, 250);
+            }
+        }
+
+        function hitungHari() {
+            const tanggalMulai = new Date("2026-05-30"); 
+            const hariMulaiNilai = 129; 
+            
+            const hariIni = new Date();
+            
+            tanggalMulai.setHours(0,0,0,0);
+            hariIni.setHours(0,0,0,0);
+            
+            const selisihWaktu = hariIni.getTime() - tanggalMulai.getTime();
+            const selisihHari = Math.floor(selisihWaktu / (1000 * 60 * 60 * 24));
+            
+            document.getElementById('days-count').innerText = hariMulaiNilai + selisihHari;
+        }
+
+        window.onload = function() {
+            hitungHari();
+        };
+    </script>
+</body>
+</html>
