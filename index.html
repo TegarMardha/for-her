@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>for her</title>
+    <title>Untuk Kamu ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         body {
@@ -68,7 +68,11 @@
             z-index: 10;
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            -webkit-tap-highlight-color: transparent;
+            
+            /* --- PENTING UNTUK HP --- */
+            -webkit-tap-highlight-color: transparent; /* Hilangkan efek kotak biru */
+            user-select: none; /* Cegah teks/gambar terblokir saat di-tap cepat */
+            touch-action: manipulation; /* Cegah HP nge-zoom otomatis saat double tap */
         }
 
         .moon-container:active {
@@ -92,7 +96,6 @@
         /* --- COUNTER DAYS --- */
         .day-counter {
             position: absolute;
-            /* DIUBAH DARI 5% MENJADI 12% AGAR LEBIH NAIK */
             bottom: 12%; 
             width: 100%;
             color: #ffffff;
@@ -111,7 +114,7 @@
         <source src="background.mp4" type="video/mp4">
     </video>
 
-    <h1>Hai, Lunar</h1>
+    <h1>Hai, Lunar 🖤</h1>
 
     <div class="moon-container" onclick="handleMoonClick()">
         <div id="message"></div>
@@ -141,6 +144,8 @@
         ];
 
         let pertamaKaliKlik = true;
+        let clickCount = 0;
+        let clickTimer = null;
 
         function dapatkanPesanHariIni() {
             const hariIni = new Date();
@@ -152,25 +157,56 @@
             return pesan[indexHariIni];
         }
 
-        function handleMoonClick() {
+        // Fungsi khusus untuk menyalakan lagu dan video
+        function jalankanMedia() {
             const musik = document.getElementById('bg-music');
             const video = document.getElementById('bg-video');
-            if (musik && musik.paused) musik.play();
-            if (video && video.paused) video.play();
+            if (musik && musik.paused) musik.play().catch(e => console.log(e));
+            if (video && video.paused) video.play().catch(e => console.log(e));
+        }
 
-            const messageElement = document.getElementById('message');
+        function handleMoonClick() {
+            clickCount++;
 
-            if (pertamaKaliKlik) {
-                messageElement.innerText = dapatkanPesanHariIni();
-                messageElement.style.opacity = 1;
-                pertamaKaliKlik = false;
-            } else {
-                const indexRandom = Math.floor(Math.random() * pesan.length);
-                messageElement.style.opacity = 0;
-                setTimeout(() => {
-                    messageElement.innerText = pesan[indexRandom];
+            if (clickCount === 1) {
+                // Tunggu 300 milidetik untuk memastikan apakah ini single tap atau double tap
+                clickTimer = setTimeout(() => {
+                    jalankanMedia(); // Play musik/video
+
+                    if (pertamaKaliKlik) {
+                        // Jika web baru dibuka, tap 1x langsung memunculkan pesan hari ini
+                        const messageElement = document.getElementById('message');
+                        messageElement.innerText = dapatkanPesanHariIni();
+                        messageElement.style.opacity = 1;
+                        pertamaKaliKlik = false;
+                    }
+                    
+                    clickCount = 0; // Reset hitungan tap
+                }, 300); 
+
+            } else if (clickCount === 2) {
+                // --- LOGIKA DOUBLE TAP (SKIP PESAN) ---
+                clearTimeout(clickTimer); // Batalkan timer single tap
+                jalankanMedia(); 
+
+                const messageElement = document.getElementById('message');
+
+                if (pertamaKaliKlik) {
+                    // Berjaga-jaga jika dia langsung double tap saat web baru dibuka
+                    messageElement.innerText = dapatkanPesanHariIni();
                     messageElement.style.opacity = 1;
-                }, 250);
+                    pertamaKaliKlik = false;
+                } else {
+                    // Ganti (skip) pesan dengan animasi transisi
+                    const indexRandom = Math.floor(Math.random() * pesan.length);
+                    messageElement.style.opacity = 0;
+                    setTimeout(() => {
+                        messageElement.innerText = pesan[indexRandom];
+                        messageElement.style.opacity = 1;
+                    }, 250);
+                }
+
+                clickCount = 0; // Reset hitungan tap setelah double tap berhasil
             }
         }
 
