@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Untuk Kamu ❤️</title>
+    <title>Hai, Lunar 🖤</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         body {
@@ -38,9 +38,10 @@
             position: absolute;
             top: 10%;
             width: 100%;
-            color: #ff4757; 
+            color: #ff4757; /* Warna merah untuk teks "Hai, Lunar" */
             font-size: 2.5em;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            /* Tambahan bayangan putih tipis di sekitar teks agar hati hitam tetap terlihat di background gelap */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 5px rgba(255, 255, 255, 0.3);
             margin: 0;
             z-index: 100;
             letter-spacing: 2px;
@@ -69,7 +70,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Efek saat bulan ditekan */
         .moon-container:active {
             transform: scale(0.95);
             box-shadow: 0 0 30px rgba(255, 255, 230, 0.2);
@@ -82,9 +82,9 @@
             line-height: 1.2;
             text-align: center;
             text-shadow: 2px 2px 8px rgba(0, 0, 0, 1), 0px 0px 10px rgba(0,0,0,0.8);
-            opacity: 0; /* Awalnya tidak terlihat */
+            opacity: 0; 
             transition: opacity 0.4s ease;
-            pointer-events: none; /* Klik tembus ke container bulan */
+            pointer-events: none; 
             font-weight: normal;
         }
     </style>
@@ -94,7 +94,7 @@
         <source src="background.mp4" type="video/mp4">
     </video>
 
-    <h1>Hai, Sayang ❤️</h1>
+    <h1>Hai, Lunar 🖤</h1>
 
     <div class="moon-container" onclick="tampilkanPesan()">
         <div id="message"></div>
@@ -122,7 +122,6 @@
         let pertamaKaliKlik = true;
 
         function tampilkanPesan() {
-            // Paksa musik dan video jalan saat klik pertama
             const musik = document.getElementById('bg-music');
             const video = document.getElementById('bg-video');
             
@@ -133,12 +132,10 @@
             const indexRandom = Math.floor(Math.random() * pesan.length);
 
             if (pertamaKaliKlik) {
-                // Langsung munculkan pesan tanpa transisi lama di klik pertama
                 messageElement.innerText = pesan[indexRandom];
                 messageElement.style.opacity = 1;
                 pertamaKaliKlik = false;
             } else {
-                // Transisi halus untuk klik selanjutnya
                 messageElement.style.opacity = 0;
                 setTimeout(() => {
                     messageElement.innerText = pesan[indexRandom];
