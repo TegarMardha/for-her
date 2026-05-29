@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Untuk Kamu ❤️</title>
+    <title>Hai, Lunar 🖤</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         body {
@@ -36,7 +36,7 @@
         /* --- HEADER DI ATAS TENGAH --- */
         h1 {
             position: absolute;
-            top: 10%; /* Dikembalikan ke 10% */
+            top: 10%; 
             width: 100%;
             color: #ff4757; 
             font-size: 2.5em;
@@ -46,12 +46,11 @@
             letter-spacing: 2px;
         }
 
-        /* --- CONTAINER BULAN (KEMBALI BULAT SEMPURNA) --- */
+        /* --- CONTAINER BULAN --- */
         .moon-container {
             width: 85vw;
             max-width: 380px;
             
-            /* Dikembalikan ke bentuk lingkaran */
             aspect-ratio: 1 / 1; 
             border-radius: 50%; 
             
@@ -93,7 +92,8 @@
         /* --- COUNTER DAYS --- */
         .day-counter {
             position: absolute;
-            bottom: 5%;
+            /* DIUBAH DARI 5% MENJADI 12% AGAR LEBIH NAIK */
+            bottom: 12%; 
             width: 100%;
             color: #ffffff;
             font-size: 1.5em;
@@ -111,7 +111,7 @@
         <source src="background.mp4" type="video/mp4">
     </video>
 
-    <h1>Hai, Lunar 🖤</h1>
+    <h1>Hai, Lunar</h1>
 
     <div class="moon-container" onclick="handleMoonClick()">
         <div id="message"></div>
