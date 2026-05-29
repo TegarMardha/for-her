@@ -10,89 +10,83 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            /* Latar belakang gradient malam: biru tua ke hitam */
-            background: linear-gradient(to bottom, #020111 0%, #191621 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
             margin: 0;
             padding: 20px;
-            overflow: hidden; /* Mencegah scroll */
+            overflow: hidden; 
             position: relative;
         }
 
-        /* --- Efek Bintang --- */
-        body::before, body::after {
-            content: "";
-            position: absolute;
+        /* --- KODE UNTUK BACKGROUND VIDEO --- */
+        #bg-video {
+            position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
-                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
-                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px);
-            background-size: 550px 550px, 350px 350px, 250px 250px;
-            background-position: 0 0, 40px 60px, 130px 270px;
-            z-index: 0; /* Di belakang container */
-        }
-        /* Sedikit variasi posisi untuk lapisan bintang kedua agar lebih padat */
-        body::after {
-            background-position: 50px 50px, 100px 100px, 200px 200px;
-            opacity: 0.7;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover; /* Memastikan video memenuhi seluruh layar tanpa merusak rasio */
+            z-index: -1; /* Memastikan video berada di urutan paling belakang */
+            filter: brightness(0.6); /* Sedikit menggelapkan video agar teks lebih terbaca */
         }
 
         .container {
-            /* Warna container semi-transparan agar bintang tetap terlihat sedikit */
-            background: rgba(255, 255, 255, 0.95);
+            /* Bentuk lingkaran dengan gambar bulan */
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background-image: url('bulan.png'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            box-shadow: 0 0 60px rgba(255, 255, 230, 0.4), inset 0 0 30px rgba(0,0,0,0.3);
+            
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             padding: 40px;
-            border-radius: 20px;
-            /* Bayangan yang lebih soft dengan warna biru tua malam */
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            max-width: 80%;
-            width: 400px;
-            z-index: 10; /* Di depan bintang */
-            position: relative;
-            /* Efek blur kaca di belakang container */
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,255,255,0.2);
+            box-sizing: border-box; 
+            z-index: 10;
         }
 
         h1 {
-            color: #ff4757; /* Warna merah hati yang sedikit lebih gelap */
-            font-size: 1.6em;
-            margin-bottom: 20px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            color: #ff4757; 
+            font-size: 1.5em;
+            margin-top: 0;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.9);
         }
 
         #message {
-            font-size: 1.25em;
-            color: #2f3542; /* Teks pesan sedikit lebih gelap agar jelas */
+            font-size: 1.2em;
+            color: #1a1a1a; 
+            font-weight: bold;
             font-style: italic;
-            line-height: 1.6;
-            min-height: 90px;
+            line-height: 1.5;
+            min-height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
+            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
         }
 
         button {
-            margin-top: 25px;
+            margin-top: 20px;
             padding: 12px 30px;
-            /* Gradasi warna tombol malam yang romantis */
             background: linear-gradient(135deg, #ff6b6b 0%, #ee5253 100%);
             color: white;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            font-size: 1em;
+            font-size: 0.95em;
             font-weight: bold;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
         }
 
         button:hover {
-            transform: translateY(-2px); /* Tombol sedikit terangkat saat hover */
+            transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
             background: linear-gradient(135deg, #ee5253 0%, #ff6b6b 100%);
         }
@@ -103,14 +97,21 @@
     </style>
 </head>
 <body>
+    <video autoplay loop muted playsinline id="bg-video">
+        <source src="background.mp4" type="video/mp4">
+    </video>
+
     <div class="container">
         <h1>Hai, Sayang ❤️</h1>
         <div id="message">Tunggu sebentar...</div>
         <button onclick="tampilkanPesan()">Baca Pesan Lainnya</button>
     </div>
 
+    <audio id="bg-music" loop>
+        <source src="lagu.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
-        // Masukkan ratusan kalimatmu ke dalam array ini
         const pesan = [
             "Aku kangen kamu hari ini.",
             "Jarak cuma angka, perasaanku ke kamu nyata.",
@@ -119,24 +120,21 @@
             "Senyum kamu itu hal favorit aku di dunia.",
             "Semoga mimpi indah ya nanti malam, Sayang.",
             "Aku selalu bangga punya kamu.",
-            "Inget ya, aku di sini selalu dukung kamu.",
-            "Kamu itu alasan aku semangat setiap pagi.",
-            "Kalau capek, istirahat ya. Jangan dipaksain.",
-            "Cuma mau bilang, makasih udah ada buat aku.",
-            "Sabar ya, waktu akan bawa kita ketemu lagi."
-            // ... Tambahkan ratusan kalimat lainnya di sini, diapit tanda kutip dan dipisah koma
+            "Inget ya, aku di sini selalu dukung kamu."
         ];
 
         function tampilkanPesan() {
-            if (pesan.length === 0) return; // Mencegah error jika array kosong
+            if (pesan.length === 0) return; 
 
-            // Logika randomizer: mengambil angka acak dari 0 sampai panjang array
+            // Putar musik saat tombol pertama kali ditekan (Opsional)
+            const musik = document.getElementById('bg-music');
+            if (musik && musik.paused) {
+                musik.play().catch(e => console.log("Audio play failed:", e));
+            }
+
             const indexRandom = Math.floor(Math.random() * pesan.length);
-            
-            // Mengambil elemen message
             const messageElement = document.getElementById('message');
             
-            // Efek transisi sederhana (fade out - fade in)
             messageElement.style.opacity = 0;
             setTimeout(() => {
                 messageElement.innerText = pesan[indexRandom];
@@ -144,9 +142,7 @@
             }, 200);
         }
 
-        // Tampilkan satu pesan otomatis saat web pertama kali dibuka
         window.onload = function() {
-            // Set opacity awal untuk transisi
             document.getElementById('message').style.transition = 'opacity 0.3s ease';
             tampilkanPesan();
         };
