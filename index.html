@@ -8,16 +8,17 @@
     <style>
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            /* Menggunakan font piksel yang baru diimpor */
-            font-family: 'VT323', 'Courier New', Courier, monospace;
+            font-family: 'VT323', monospace;
             text-align: center;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             overflow: hidden; 
             position: relative;
+            background-color: #000;
         }
 
         /* --- BACKGROUND VIDEO --- */
@@ -29,73 +30,62 @@
             height: 100vh;
             object-fit: cover;
             z-index: -1;
-            filter: brightness(0.6);
+            filter: brightness(0.5);
         }
 
-        .container {
-            /* PERBAIKAN RESPONSIVE: Menggunakan aspect-ratio agar selalu bulat sempurna di HP */
+        /* --- HEADER DI ATAS TENGAH --- */
+        h1 {
+            position: absolute;
+            top: 10%;
+            width: 100%;
+            color: #ff4757; 
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            margin: 0;
+            z-index: 100;
+            letter-spacing: 2px;
+        }
+
+        /* --- CONTAINER BULAN (SEBAGAI TOMBOL) --- */
+        .moon-container {
             width: 85vw;
             max-width: 380px;
             aspect-ratio: 1 / 1; 
             border-radius: 50%;
-            
             background-image: url('bulan.png'); 
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            box-shadow: 0 0 60px rgba(255, 255, 230, 0.4), inset 0 0 30px rgba(0,0,0,0.3);
+            box-shadow: 0 0 50px rgba(255, 255, 230, 0.3), inset 0 0 30px rgba(0,0,0,0.5);
             
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 35px;
+            padding: 40px;
             box-sizing: border-box; 
             z-index: 10;
-        }
-
-        h1 {
-            color: #ff4757; 
-            font-size: 2.2em; /* Ukuran disesuaikan untuk font piksel */
-            margin-top: 0;
-            margin-bottom: 5px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-            letter-spacing: 1px;
-        }
-
-        #message {
-            font-size: 1.6em; /* Ukuran disesuaikan untuk font piksel */
-            color: #ffffff; 
-            line-height: 1.3;
-            min-height: 70px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            /* Bayangan teks hitam pekat agar sangat kontras di atas gambar bulan */
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.9);
-            padding: 0 10px;
-        }
-
-        /* --- PERBAIKAN TOMBOL: Menjadi Ikon Love Hitam --- */
-        button {
-            margin-top: 15px;
-            background: transparent; /* Menghilangkan background kotak */
-            border: none;
-            font-size: 2.8em; /* Mengatur ukuran ikon love */
             cursor: pointer;
-            transition: transform 0.2s ease;
-            padding: 0;
-            line-height: 1;
-            outline: none;
-            -webkit-tap-highlight-color: transparent; /* Menghilangkan efek biru saat ditekan di HP */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        button:hover {
-            transform: scale(1.2); /* Efek sedikit membesar saat diarahkan kursor */
+        /* Efek saat bulan ditekan */
+        .moon-container:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 30px rgba(255, 255, 230, 0.2);
         }
 
-        button:active {
-            transform: scale(0.9); /* Efek sedikit mengecil saat diklik */
+        /* --- TEKS PESAN --- */
+        #message {
+            font-size: 1.7em;
+            color: #ffffff; 
+            line-height: 1.2;
+            text-align: center;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 1), 0px 0px 10px rgba(0,0,0,0.8);
+            opacity: 0; /* Awalnya tidak terlihat */
+            transition: opacity 0.4s ease;
+            pointer-events: none; /* Klik tembus ke container bulan */
+            font-weight: normal;
         }
     </style>
 </head>
@@ -104,10 +94,10 @@
         <source src="background.mp4" type="video/mp4">
     </video>
 
-    <div class="container">
-        <h1>Hai, Sayang ❤️</h1>
-        <div id="message">Tunggu sebentar...</div>
-        <button onclick="tampilkanPesan()">🖤</button>
+    <h1>Hai, Sayang ❤️</h1>
+
+    <div class="moon-container" onclick="tampilkanPesan()">
+        <div id="message"></div>
     </div>
 
     <audio id="bg-music" loop>
@@ -123,31 +113,39 @@
             "Senyum kamu itu hal favorit aku di dunia.",
             "Semoga mimpi indah ya nanti malam, Sayang.",
             "Aku selalu bangga punya kamu.",
-            "Inget ya, aku di sini selalu dukung kamu."
+            "Inget ya, aku di sini selalu dukung kamu.",
+            "Setiap detik tanpamu terasa sangat lama.",
+            "Aku sudah siapkan banyak pelukan saat kita bertemu nanti."
+            // Tambahkan terus sampai 500 kalimat...
         ];
 
+        let pertamaKaliKlik = true;
+
         function tampilkanPesan() {
-            if (pesan.length === 0) return; 
-
+            // Paksa musik dan video jalan saat klik pertama
             const musik = document.getElementById('bg-music');
-            if (musik && musik.paused) {
-                musik.play().catch(e => console.log("Audio play failed:", e));
-            }
-
-            const indexRandom = Math.floor(Math.random() * pesan.length);
-            const messageElement = document.getElementById('message');
+            const video = document.getElementById('bg-video');
             
-            messageElement.style.opacity = 0;
-            setTimeout(() => {
+            if (musik && musik.paused) musik.play();
+            if (video && video.paused) video.play();
+
+            const messageElement = document.getElementById('message');
+            const indexRandom = Math.floor(Math.random() * pesan.length);
+
+            if (pertamaKaliKlik) {
+                // Langsung munculkan pesan tanpa transisi lama di klik pertama
                 messageElement.innerText = pesan[indexRandom];
                 messageElement.style.opacity = 1;
-            }, 200);
+                pertamaKaliKlik = false;
+            } else {
+                // Transisi halus untuk klik selanjutnya
+                messageElement.style.opacity = 0;
+                setTimeout(() => {
+                    messageElement.innerText = pesan[indexRandom];
+                    messageElement.style.opacity = 1;
+                }, 250);
+            }
         }
-
-        window.onload = function() {
-            document.getElementById('message').style.transition = 'opacity 0.3s ease';
-            tampilkanPesan();
-        };
     </script>
 </body>
 </html>
