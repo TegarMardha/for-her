@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Untuk Kamu ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Menggunakan font piksel yang baru diimpor */
+            font-family: 'VT323', 'Courier New', Courier, monospace;
             text-align: center;
             margin: 0;
             padding: 20px;
@@ -18,23 +20,25 @@
             position: relative;
         }
 
-        /* --- KODE UNTUK BACKGROUND VIDEO --- */
+        /* --- BACKGROUND VIDEO --- */
         #bg-video {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            object-fit: cover; /* Memastikan video memenuhi seluruh layar tanpa merusak rasio */
-            z-index: -1; /* Memastikan video berada di urutan paling belakang */
-            filter: brightness(0.6); /* Sedikit menggelapkan video agar teks lebih terbaca */
+            object-fit: cover;
+            z-index: -1;
+            filter: brightness(0.6);
         }
 
         .container {
-            /* Bentuk lingkaran dengan gambar bulan */
-            width: 380px;
-            height: 380px;
+            /* PERBAIKAN RESPONSIVE: Menggunakan aspect-ratio agar selalu bulat sempurna di HP */
+            width: 85vw;
+            max-width: 380px;
+            aspect-ratio: 1 / 1; 
             border-radius: 50%;
+            
             background-image: url('bulan.png'); 
             background-size: cover;
             background-position: center;
@@ -45,54 +49,53 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 40px;
+            padding: 35px;
             box-sizing: border-box; 
             z-index: 10;
         }
 
         h1 {
             color: #ff4757; 
-            font-size: 1.5em;
+            font-size: 2.2em; /* Ukuran disesuaikan untuk font piksel */
             margin-top: 0;
-            margin-bottom: 15px;
-            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.9);
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            letter-spacing: 1px;
         }
 
         #message {
-            font-size: 1.2em;
-            color: #1a1a1a; 
-            font-weight: bold;
-            font-style: italic;
-            line-height: 1.5;
-            min-height: 80px;
+            font-size: 1.6em; /* Ukuran disesuaikan untuk font piksel */
+            color: #ffffff; 
+            line-height: 1.3;
+            min-height: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
-            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
+            /* Bayangan teks hitam pekat agar sangat kontras di atas gambar bulan */
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.9);
+            padding: 0 10px;
         }
 
+        /* --- PERBAIKAN TOMBOL: Menjadi Ikon Love Hitam --- */
         button {
-            margin-top: 20px;
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5253 100%);
-            color: white;
+            margin-top: 15px;
+            background: transparent; /* Menghilangkan background kotak */
             border: none;
-            border-radius: 50px;
+            font-size: 2.8em; /* Mengatur ukuran ikon love */
             cursor: pointer;
-            font-size: 0.95em;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            transition: transform 0.2s ease;
+            padding: 0;
+            line-height: 1;
+            outline: none;
+            -webkit-tap-highlight-color: transparent; /* Menghilangkan efek biru saat ditekan di HP */
         }
 
         button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
-            background: linear-gradient(135deg, #ee5253 0%, #ff6b6b 100%);
+            transform: scale(1.2); /* Efek sedikit membesar saat diarahkan kursor */
         }
 
         button:active {
-            transform: translateY(1px);
+            transform: scale(0.9); /* Efek sedikit mengecil saat diklik */
         }
     </style>
 </head>
@@ -104,7 +107,7 @@
     <div class="container">
         <h1>Hai, Sayang ❤️</h1>
         <div id="message">Tunggu sebentar...</div>
-        <button onclick="tampilkanPesan()">Baca Pesan Lainnya</button>
+        <button onclick="tampilkanPesan()">🖤</button>
     </div>
 
     <audio id="bg-music" loop>
@@ -126,7 +129,6 @@
         function tampilkanPesan() {
             if (pesan.length === 0) return; 
 
-            // Putar musik saat tombol pertama kali ditekan (Opsional)
             const musik = document.getElementById('bg-music');
             if (musik && musik.paused) {
                 musik.play().catch(e => console.log("Audio play failed:", e));
