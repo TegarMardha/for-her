@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hai, Lunar 🖤</title>
+    <title>Untuk Kamu ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         body {
@@ -38,16 +38,15 @@
             position: absolute;
             top: 10%;
             width: 100%;
-            color: #ff4757; /* Warna merah untuk teks "Hai, Lunar" */
+            color: #ff4757; 
             font-size: 2.5em;
-            /* Tambahan bayangan putih tipis di sekitar teks agar hati hitam tetap terlihat di background gelap */
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 5px rgba(255, 255, 255, 0.3);
             margin: 0;
             z-index: 100;
             letter-spacing: 2px;
         }
 
-        /* --- CONTAINER BULAN (SEBAGAI TOMBOL) --- */
+        /* --- CONTAINER BULAN --- */
         .moon-container {
             width: 85vw;
             max-width: 380px;
@@ -87,6 +86,21 @@
             pointer-events: none; 
             font-weight: normal;
         }
+
+        /* --- COUNTER DAYS DI TENGAH PALING BAWAH --- */
+        .day-counter {
+            position: absolute;
+            bottom: 5%;
+            width: 100%;
+            color: #ffffff;
+            font-size: 1.5em;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px; /* Jarak antara love hitam dan angka */
+        }
     </style>
 </head>
 <body>
@@ -96,8 +110,12 @@
 
     <h1>Hai, Lunar 🖤</h1>
 
-    <div class="moon-container" onclick="tampilkanPesan()">
+    <div class="moon-container" onclick="handleMoonClick()">
         <div id="message"></div>
+    </div>
+
+    <div class="day-counter">
+        <span>🖤</span> <span id="days-count">129</span>
     </div>
 
     <audio id="bg-music" loop>
@@ -121,21 +139,36 @@
 
         let pertamaKaliKlik = true;
 
-        function tampilkanPesan() {
+        // Fungsi matematika sederhana untuk mengunci angka random berdasarkan "seed" (hari)
+        function dapatkanPesanHariIni() {
+            const hariIni = new Date();
+            // Membuat format string unik per hari, contoh: "2026530"
+            const seedString = hariIni.getFullYear().toString() + hariIni.getMonth().toString() + hariIni.getDate().toString();
+            let seed = parseInt(seedString);
+            
+            // Logika Pseudo-random generator berdasarkan seed tanggal
+            let x = Math.sin(seed++) * 10000;
+            const indexHariIni = Math.floor((x - Math.floor(x)) * pesan.length);
+            return pesan[indexHariIni];
+        }
+
+        function handleMoonClick() {
+            // Paksa musik dan video jalan saat interaksi pertama
             const musik = document.getElementById('bg-music');
             const video = document.getElementById('bg-video');
-            
             if (musik && musik.paused) musik.play();
             if (video && video.paused) video.play();
 
             const messageElement = document.getElementById('message');
-            const indexRandom = Math.floor(Math.random() * pesan.length);
 
             if (pertamaKaliKlik) {
-                messageElement.innerText = pesan[indexRandom];
+                // Klik pertama: Munculkan kata yang sama selama 24 jam itu
+                messageElement.innerText = dapatkanPesanHariIni();
                 messageElement.style.opacity = 1;
                 pertamaKaliKlik = false;
             } else {
+                // Klik kedua dan seterusnya (Skip): Acak bebas kalimat lain
+                const indexRandom = Math.floor(Math.random() * pesan.length);
                 messageElement.style.opacity = 0;
                 setTimeout(() => {
                     messageElement.innerText = pesan[indexRandom];
@@ -143,6 +176,31 @@
                 }, 250);
             }
         }
+
+        // Fungsi menghitung selisih hari otomatis (Mulai dari 30 Mei 2026 sebagai hari ke-129)
+        function hitungHari() {
+            const tanggalMulai = new Date("2026-05-30"); 
+            const hariMulaiNilai = 129; // Nilai dasar hari ini
+            
+            const hariIni = new Date();
+            
+            // Set waktu ke jam 00:00:00 agar kalkulasi selisih hari akurat
+            tanggalMulai.setHours(0,0,0,0);
+            hariIni.setHours(0,0,0,0);
+            
+            // Hitung perbedaan waktu dalam milidetik
+            const selisihWaktu = hariIni.getTime() - tanggalMulai.getTime();
+            // Ubah milidetik menjadi hari
+            const selisihHari = Math.floor(selisihWaktu / (1000 * 60 * 60 * 24));
+            
+            // Tampilkan hasil akumulasi otomatis
+            document.getElementById('days-count').innerText = hariMulaiNilai + selisihHari;
+        }
+
+        // Jalankan fungsi hitung hari otomatis saat web dimuat
+        window.onload = function() {
+            hitungHari();
+        };
     </script>
 </body>
 </html>
