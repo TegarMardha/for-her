@@ -3,55 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Untuk Kamu </title>
+    <title>Untuk Kamu ❤️</title>
     <style>
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #fdfbfb; /* Warna latar yang lembut */
+            /* Latar belakang gradient malam: biru tua ke hitam */
+            background: linear-gradient(to bottom, #020111 0%, #191621 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
             margin: 0;
             padding: 20px;
+            overflow: hidden; /* Mencegah scroll */
+            position: relative;
         }
+
+        /* --- Efek Bintang --- */
+        body::before, body::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: 0; /* Di belakang container */
+        }
+        /* Sedikit variasi posisi untuk lapisan bintang kedua agar lebih padat */
+        body::after {
+            background-position: 50px 50px, 100px 100px, 200px 200px;
+            opacity: 0.7;
+        }
+
         .container {
-            background: white;
+            /* Warna container semi-transparan agar bintang tetap terlihat sedikit */
+            background: rgba(255, 255, 255, 0.95);
             padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            /* Bayangan yang lebih soft dengan warna biru tua malam */
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
             max-width: 80%;
             width: 400px;
+            z-index: 10; /* Di depan bintang */
+            position: relative;
+            /* Efek blur kaca di belakang container */
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2);
         }
+
         h1 {
-            color: #ff6b6b;
-            font-size: 1.5em;
+            color: #ff4757; /* Warna merah hati yang sedikit lebih gelap */
+            font-size: 1.6em;
             margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
+
         #message {
-            font-size: 1.2em;
-            color: #4a4a4a;
+            font-size: 1.25em;
+            color: #2f3542; /* Teks pesan sedikit lebih gelap agar jelas */
             font-style: italic;
-            line-height: 1.5;
-            min-height: 80px; /* Menjaga agar tombol tidak melompat */
+            line-height: 1.6;
+            min-height: 90px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
+
         button {
             margin-top: 25px;
-            padding: 12px 25px;
-            background-color: #ff6b6b;
+            padding: 12px 30px;
+            /* Gradasi warna tombol malam yang romantis */
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5253 100%);
             color: white;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             font-size: 1em;
-            transition: background-color 0.3s;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
         }
+
         button:hover {
-            background-color: #ee5253;
+            transform: translateY(-2px); /* Tombol sedikit terangkat saat hover */
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+            background: linear-gradient(135deg, #ee5253 0%, #ff6b6b 100%);
+        }
+
+        button:active {
+            transform: translateY(1px);
         }
     </style>
 </head>
@@ -63,24 +110,46 @@
     </div>
 
     <script>
-        // Masukkan 500 kalimatmu ke dalam array ini
+        // Masukkan ratusan kalimatmu ke dalam array ini
         const pesan = [
             "Aku kangen kamu hari ini.",
             "Jarak cuma angka, perasaanku ke kamu nyata.",
             "Semangat ya hari ini! You got this.",
             "Jangan lupa makan yang bener, aku nggak mau kamu sakit.",
             "Senyum kamu itu hal favorit aku di dunia.",
+            "Semoga mimpi indah ya nanti malam, Sayang.",
+            "Aku selalu bangga punya kamu.",
+            "Inget ya, aku di sini selalu dukung kamu.",
+            "Kamu itu alasan aku semangat setiap pagi.",
+            "Kalau capek, istirahat ya. Jangan dipaksain.",
+            "Cuma mau bilang, makasih udah ada buat aku.",
+            "Sabar ya, waktu akan bawa kita ketemu lagi."
             // ... Tambahkan ratusan kalimat lainnya di sini, diapit tanda kutip dan dipisah koma
         ];
 
         function tampilkanPesan() {
+            if (pesan.length === 0) return; // Mencegah error jika array kosong
+
             // Logika randomizer: mengambil angka acak dari 0 sampai panjang array
             const indexRandom = Math.floor(Math.random() * pesan.length);
-            document.getElementById('message').innerText = pesan[indexRandom];
+            
+            // Mengambil elemen message
+            const messageElement = document.getElementById('message');
+            
+            // Efek transisi sederhana (fade out - fade in)
+            messageElement.style.opacity = 0;
+            setTimeout(() => {
+                messageElement.innerText = pesan[indexRandom];
+                messageElement.style.opacity = 1;
+            }, 200);
         }
 
         // Tampilkan satu pesan otomatis saat web pertama kali dibuka
-        window.onload = tampilkanPesan;
+        window.onload = function() {
+            // Set opacity awal untuk transisi
+            document.getElementById('message').style.transition = 'opacity 0.3s ease';
+            tampilkanPesan();
+        };
     </script>
 </body>
 </html>
