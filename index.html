@@ -1,74 +1,86 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Untuk Kamu ❤️</title>
-
-<style>
-body{
-    margin:0;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:#ffe6eb;
-    font-family:Arial,sans-serif;
-    text-align:center;
-}
-
-.container{
-    max-width:700px;
-    padding:30px;
-}
-
-#message{
-    font-size:28px;
-    color:#d63384;
-    margin-bottom:20px;
-}
-
-button{
-    padding:12px 24px;
-    border:none;
-    border-radius:12px;
-    cursor:pointer;
-    font-size:16px;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Untuk Kamu</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #fdfbfb; /* Warna latar yang lembut */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            max-width: 80%;
+            width: 400px;
+        }
+        h1 {
+            color: #ff6b6b;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        #message {
+            font-size: 1.2em;
+            color: #4a4a4a;
+            font-style: italic;
+            line-height: 1.5;
+            min-height: 80px; /* Menjaga agar tombol tidak melompat */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        button {
+            margin-top: 25px;
+            padding: 12px 25px;
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #ee5253;
+        }
+    </style>
 </head>
-
 <body>
+    <div class="container">
+        <h1>Hai, Sayang ❤️</h1>
+        <div id="message">Tunggu sebentar...</div>
+        <button onclick="tampilkanPesan()">Baca Pesan Lainnya</button>
+    </div>
 
-<div class="container">
-    <div id="message"></div>
+    <script>
+        // Masukkan 500 kalimatmu ke dalam array ini
+        const pesan = [
+            "Aku kangen kamu hari ini.",
+            "Jarak cuma angka, perasaanku ke kamu nyata.",
+            "Semangat ya hari ini! You got this.",
+            "Jangan lupa makan yang bener, aku nggak mau kamu sakit.",
+            "Senyum kamu itu hal favorit aku di dunia.",
+            // ... Tambahkan ratusan kalimat lainnya di sini, diapit tanda kutip dan dipisah koma
+        ];
 
-    <button onclick="newMessage()">
-        Pesan Lain ❤️
-    </button>
-</div>
+        function tampilkanPesan() {
+            // Logika randomizer: mengambil angka acak dari 0 sampai panjang array
+            const indexRandom = Math.floor(Math.random() * pesan.length);
+            document.getElementById('message').innerText = pesan[indexRandom];
+        }
 
-<script>
-
-const messages = [
-    "Aku bangga sama kamu hari ini.",
-    "Kalau hari ini berat, aku tetap ada untukmu.",
-    "Jangan lupa makan ya cantik.",
-    "Terima kasih sudah hadir di hidupku.",
-    "Aku harap hari ini ada hal kecil yang membuatmu tersenyum."
-];
-
-function newMessage(){
-    const random =
-        messages[Math.floor(Math.random()*messages.length)];
-
-    document.getElementById("message").innerText = random;
-}
-
-newMessage();
-
-</script>
-
+        // Tampilkan satu pesan otomatis saat web pertama kali dibuka
+        window.onload = tampilkanPesan;
+    </script>
 </body>
 </html>
