@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Untuk Kamu ❤️</title>
+
+<style>
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#ffe6eb;
+    font-family:Arial,sans-serif;
+    text-align:center;
+}
+
+.container{
+    max-width:700px;
+    padding:30px;
+}
+
+#message{
+    font-size:28px;
+    color:#d63384;
+    margin-bottom:20px;
+}
+
+button{
+    padding:12px 24px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:16px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div id="message"></div>
+
+    <button onclick="newMessage()">
+        Pesan Lain ❤️
+    </button>
+</div>
+
+<script>
+
+const messages = [
+    "Aku bangga sama kamu hari ini.",
+    "Kalau hari ini berat, aku tetap ada untukmu.",
+    "Jangan lupa makan ya cantik.",
+    "Terima kasih sudah hadir di hidupku.",
+    "Aku harap hari ini ada hal kecil yang membuatmu tersenyum."
+];
+
+function newMessage(){
+    const random =
+        messages[Math.floor(Math.random()*messages.length)];
+
+    document.getElementById("message").innerText = random;
+}
+
+newMessage();
+
+</script>
+
+</body>
+</html>
