@@ -1,86 +1,167 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Untuk Kamu</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #fdfbfb; /* Warna latar yang lembut */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            max-width: 80%;
-            width: 400px;
-        }
-        h1 {
-            color: #ff6b6b;
-            font-size: 1.5em;
-            margin-bottom: 20px;
-        }
-        #message {
-            font-size: 1.2em;
-            color: #4a4a4a;
-            font-style: italic;
-            line-height: 1.5;
-            min-height: 80px; /* Menjaga agar tombol tidak melompat */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        button {
-            margin-top: 25px;
-            padding: 12px 25px;
-            background-color: #ff6b6b;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #ee5253;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Untuk Kamu ❤️</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ffd6e7,
+        #ffe5d9,
+        #f8d9ff,
+        #dbeafe
+    );
+
+    background-size:400% 400%;
+    animation:gradient 15s ease infinite;
+
+    padding:20px;
+}
+
+@keyframes gradient{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+.card{
+    width:100%;
+    max-width:800px;
+
+    background:rgba(255,255,255,0.25);
+
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,0.3);
+
+    border-radius:30px;
+
+    padding:50px 35px;
+
+    text-align:center;
+
+    box-shadow:
+    0 8px 32px rgba(0,0,0,0.1);
+}
+
+h1{
+    color:#ffffff;
+    font-size:1.3rem;
+    margin-bottom:30px;
+    font-weight:400;
+}
+
+#message{
+    color:white;
+    font-size:1.8rem;
+    line-height:1.8;
+    font-weight:600;
+    min-height:140px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+button{
+    margin-top:25px;
+
+    border:none;
+
+    background:white;
+    color:#ff4d8d;
+
+    padding:14px 28px;
+
+    border-radius:999px;
+
+    font-size:1rem;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+button:hover{
+    transform:translateY(-3px);
+}
+
+.footer{
+    margin-top:25px;
+    color:white;
+    opacity:.8;
+    font-size:.9rem;
+}
+
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>Hai, Sayang ❤️</h1>
-        <div id="message">Tunggu sebentar...</div>
-        <button onclick="tampilkanPesan()">Baca Pesan Lainnya</button>
+
+<div class="card">
+
+    <h1>Untuk seseorang yang selalu aku pikirkan ❤️</h1>
+
+    <div id="message"></div>
+
+    <button onclick="newMessage()">
+        Pesan Lain ❤️
+    </button>
+
+    <div class="footer">
+        Dibuat khusus oleh Tegar
     </div>
 
-    <script>
-        // Masukkan 500 kalimatmu ke dalam array ini
-        const pesan = [
-            "Aku kangen kamu hari ini.",
-            "Jarak cuma angka, perasaanku ke kamu nyata.",
-            "Semangat ya hari ini! You got this.",
-            "Jangan lupa makan yang bener, aku nggak mau kamu sakit.",
-            "Senyum kamu itu hal favorit aku di dunia.",
-            // ... Tambahkan ratusan kalimat lainnya di sini, diapit tanda kutip dan dipisah koma
-        ];
+</div>
 
-        function tampilkanPesan() {
-            // Logika randomizer: mengambil angka acak dari 0 sampai panjang array
-            const indexRandom = Math.floor(Math.random() * pesan.length);
-            document.getElementById('message').innerText = pesan[indexRandom];
-        }
+<script>
 
-        // Tampilkan satu pesan otomatis saat web pertama kali dibuka
-        window.onload = tampilkanPesan;
-    </script>
+const messages = [
+    "Aku harap hari ini ada sesuatu yang membuatmu tersenyum.",
+    "Aku bangga dengan semua usaha yang kamu lakukan.",
+    "Jangan lupa istirahat kalau capek ya.",
+    "Terima kasih sudah hadir dalam hidupku.",
+    "Walaupun jauh, kamu selalu dekat di pikiranku.",
+    "Semoga harimu berjalan lebih baik dari yang kamu bayangkan.",
+    "Kamu lebih kuat daripada yang kamu kira.",
+    "Aku selalu mendukungmu, bahkan dari jauh.",
+    "Hari ini jangan lupa makan yang cukup ya cantik.",
+    "Aku tidak sabar menunggu hari kita bertemu lagi."
+];
+
+function newMessage(){
+    const random =
+    messages[Math.floor(Math.random()*messages.length)];
+
+    document.getElementById("message").innerText = random;
+}
+
+newMessage();
+
+</script>
+
 </body>
 </html>
