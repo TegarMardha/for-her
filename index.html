@@ -44,7 +44,7 @@
             margin: 0;
             z-index: 100;
             letter-spacing: 2px;
-            pointer-events: none; /* Agar klik tembus ke background */
+            pointer-events: none; 
         }
 
         /* --- CONTAINER BULAN --- */
@@ -106,30 +106,27 @@
             justify-content: center;
             align-items: center;
             gap: 8px; 
-            pointer-events: none; /* Agar klik tembus ke background */
+            pointer-events: none; 
         }
 
         /* --- CSS EFEK BINTANG / BUBU DUDU --- */
         .falling-object {
             position: absolute;
-            z-index: 5; /* Berada di antara background dan bulan */
-            pointer-events: none; /* Agar tidak menghalangi klik lainnya */
+            z-index: 5; 
+            pointer-events: none; 
             animation: fallDiagonal linear forwards;
         }
 
-        /* Ukuran Bintang */
         .star-img {
             width: 150px; 
             filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
         }
 
-        /* Ukuran Bubu Dudu */
         .bubu-img {
             width: 120px; 
             filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
         }
 
-        /* Animasi meluncur dari kiri atas ke kanan bawah */
         @keyframes fallDiagonal {
             0% {
                 transform: translate(0, 0) scale(0.8);
@@ -168,7 +165,6 @@
     </audio>
 
     <script>
-        // --- DATA DAN LOGIKA BULAN (Sama seperti sebelumnya) ---
         const pesan = [
             "Aku kangen kamu hari ini.",
             "Jarak cuma angka, perasaanku ke kamu nyata.",
@@ -261,39 +257,30 @@
 
         // --- LOGIKA BARU: INTERAKSI BACKGROUND (BINTANG JATUH / BUBU DUDU) ---
         document.body.addEventListener('click', function(e) {
-            // Cegah fungsi ini berjalan kalau yang ditekan adalah si Bulan (moon-container)
             if (e.target.closest('.moon-container')) {
                 return;
             }
 
-            // Putar media jika disentuh lewat background pertama kali
             jalankanMedia();
 
-            // Membuat elemen gambar baru secara dinamis
             const flyingObj = document.createElement('img');
             
-            // Randomizer probabilitas: 20% (0.0 sampai 0.2) untuk Bubu Dudu, sisanya Star
             const isBubu = Math.random() < 0.20; 
             
-            // Set sumber gambar dan class CSS-nya
             flyingObj.src = isBubu ? 'bubududu.png' : 'star.png';
             flyingObj.className = 'falling-object ' + (isBubu ? 'bubu-img' : 'star-img');
 
-            // Set posisi mulai secara random di sumbu Y (dari ketinggian -10vh (atas) sampai 60vh (bawah))
-            const randomY = Math.floor(Math.random() * 70) - 10;
+            // --- PERBAIKAN: Posisi kemunculan difokuskan di bagian atas (-10vh sampai 20vh) ---
+            const randomY = Math.floor(Math.random() * 30) - 10;
             flyingObj.style.top = randomY + 'vh';
             
-            // Mulai dari kiri layar (-20vw)
             flyingObj.style.left = '-20vw'; 
 
-            // Tambahkan variasi kecepatan animasi biar natural (antara 1.5 detik sampai 2.5 detik)
             const animationDuration = (Math.random() * 1 + 1.5).toFixed(2);
             flyingObj.style.animationDuration = animationDuration + 's';
 
-            // Memasukkan gambar ke dalam body layar
             document.body.appendChild(flyingObj);
 
-            // Menghapus elemen gambar dari memori setelah animasinya selesai
             setTimeout(() => {
                 flyingObj.remove();
             }, animationDuration * 1000);
