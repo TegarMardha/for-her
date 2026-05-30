@@ -134,4 +134,230 @@
             box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.6);
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s ease, transform 0.3
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            border-radius: 0; 
+            z-index: 200;
+            letter-spacing: 1px;
+            text-shadow: none; 
+        }
+
+        .pixel-bubble::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 6px;
+            border-style: solid;
+            border-color: #ff4757 transparent transparent transparent; 
+        }
+
+        .pixel-bubble.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* --- CSS EFEK BINTANG / BUBU DUDU --- */
+        .falling-object {
+            position: absolute;
+            z-index: 5; 
+            pointer-events: none; 
+            animation: fallDiagonal linear forwards;
+        }
+
+        .star-img {
+            width: 150px; 
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
+        }
+
+        .bubu-img {
+            width: 120px; 
+            filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+        }
+
+        /* --- PERBAIKAN: LINTASAN LEBIH JAUH KE KANAN --- */
+        @keyframes fallDiagonal {
+            0% {
+                transform: translate(0, 0) scale(0.8);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                /* Mengubah nilai 120vw menjadi 160vw agar lebih condong ke kanan */
+                transform: translate(160vw, 120vh) scale(1);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <video autoplay loop muted playsinline id="bg-video">
+        <source src="background.mp4" type="video/mp4">
+    </video>
+
+    <h1>Hai, Lunar</h1>
+
+    <div class="moon-container" onclick="handleMoonClick()">
+        <div id="message"></div>
+    </div>
+
+    <div class="day-counter">
+        <div class="heart-container" onclick="toggleBubble(event)">
+            <span>🖤</span>
+            <div id="heart-bubble" class="pixel-bubble">days since our heart met, and still counting...</div>
+        </div>
+        <span id="days-count">129</span>
+    </div>
+
+    <audio id="bg-music" loop>
+        <source src="lagu.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const pesan = [
+            "Aku kangen kamu hari ini.",
+            "Jarak cuma angka, perasaanku ke kamu nyata.",
+            "Semangat ya hari ini! You got this.",
+            "Jangan lupa makan yang bener, aku nggak mau kamu sakit.",
+            "Senyum kamu itu hal favorit aku di dunia.",
+            "Semoga mimpi indah ya nanti malam, Sayang.",
+            "Aku selalu bangga punya kamu.",
+            "Inget ya, aku di sini selalu dukung kamu.",
+            "Setiap detik tanpamu terasa sangat lama.",
+            "Aku sudah siapkan banyak pelukan saat kita bertemu nanti."
+            // Tambahkan terus sampai 500 kalimat...
+        ];
+
+        let pertamaKaliKlik = true;
+        let clickCount = 0;
+        let clickTimer = null;
+        let bubbleTimer = null; 
+
+        function dapatkanPesanHariIni() {
+            const hariIni = new Date();
+            const seedString = hariIni.getFullYear().toString() + hariIni.getMonth().toString() + hariIni.getDate().toString();
+            let seed = parseInt(seedString);
+            
+            let x = Math.sin(seed++) * 10000;
+            const indexHariIni = Math.floor((x - Math.floor(x)) * pesan.length);
+            return pesan[indexHariIni];
+        }
+
+        function jalankanMedia() {
+            const musik = document.getElementById('bg-music');
+            const video = document.getElementById('bg-video');
+            if (musik && musik.paused) musik.play().catch(e => console.log(e));
+            if (video && video.paused) video.play().catch(e => console.log(e));
+        }
+
+        function handleMoonClick() {
+            clickCount++;
+
+            if (clickCount === 1) {
+                clickTimer = setTimeout(() => {
+                    jalankanMedia(); 
+                    if (pertamaKaliKlik) {
+                        const messageElement = document.getElementById('message');
+                        messageElement.innerText = dapatkanPesanHariIni();
+                        messageElement.style.opacity = 1;
+                        pertamaKaliKlik = false;
+                    }
+                    clickCount = 0; 
+                }, 300); 
+
+            } else if (clickCount === 2) {
+                clearTimeout(clickTimer); 
+                jalankanMedia(); 
+
+                const messageElement = document.getElementById('message');
+
+                if (pertamaKaliKlik) {
+                    messageElement.innerText = dapatkanPesanHariIni();
+                    messageElement.style.opacity = 1;
+                    pertamaKaliKlik = false;
+                } else {
+                    const indexRandom = Math.floor(Math.random() * pesan.length);
+                    messageElement.style.opacity = 0;
+                    setTimeout(() => {
+                        messageElement.innerText = pesan[indexRandom];
+                        messageElement.style.opacity = 1;
+                    }, 250);
+                }
+                clickCount = 0; 
+            }
+        }
+
+        function hitungHari() {
+            const tanggalMulai = new Date("2026-05-30"); 
+            const hariMulaiNilai = 129; 
+            
+            const hariIni = new Date();
+            tanggalMulai.setHours(0,0,0,0);
+            hariIni.setHours(0,0,0,0);
+            
+            const selisihWaktu = hariIni.getTime() - tanggalMulai.getTime();
+            const selisihHari = Math.floor(selisihWaktu / (1000 * 60 * 60 * 24));
+            
+            document.getElementById('days-count').innerText = hariMulaiNilai + selisihHari;
+        }
+
+        function toggleBubble(e) {
+            e.stopPropagation(); 
+            
+            const bubble = document.getElementById('heart-bubble');
+            bubble.classList.add('show');
+            
+            if (bubbleTimer) clearTimeout(bubbleTimer);
+            
+            bubbleTimer = setTimeout(() => {
+                bubble.classList.remove('show');
+            }, 3000);
+        }
+
+        window.onload = function() {
+            hitungHari();
+        };
+
+        // --- INTERAKSI BACKGROUND (BINTANG JATUH / BUBU DUDU) ---
+        document.body.addEventListener('click', function(e) {
+            const bubble = document.getElementById('heart-bubble');
+            if (bubble && bubble.classList.contains('show') && !e.target.closest('.heart-container')) {
+                bubble.classList.remove('show');
+            }
+
+            if (e.target.closest('.moon-container') || e.target.closest('.heart-container')) {
+                return;
+            }
+
+            jalankanMedia();
+
+            const flyingObj = document.createElement('img');
+            
+            const isBubu = Math.random() < 0.20; 
+            
+            flyingObj.src = isBubu ? 'bubududu.png' : 'star.png';
+            flyingObj.className = 'falling-object ' + (isBubu ? 'bubu-img' : 'star-img');
+
+            const randomY = Math.floor(Math.random() * 30) - 10;
+            flyingObj.style.top = randomY + 'vh';
+            
+            flyingObj.style.left = '-20vw'; 
+
+            const animationDuration = (Math.random() * 1 + 1.5).toFixed(2);
+            flyingObj.style.animationDuration = animationDuration + 's';
+
+            document.body.appendChild(flyingObj);
+
+            setTimeout(() => {
+                flyingObj.remove();
+            }, animationDuration * 1000);
+        });
+    </script>
+</body>
+</html>
