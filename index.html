@@ -227,10 +227,10 @@
             "Aku selalu bangga punya kamu.",
             "Inget ya, aku di sini selalu dukung kamu.",
             "Setiap detik tanpamu terasa sangat lama.",
-            "Aku sudah siapkan banyak pelukan saat kita bertemu nanti.",
+            "Aku udah siapin banyak pelukan saat kita ketemu nanti.",
             "Your laugh unforgettable",
             "I miss ur voices bb",
-            "Semoga hari ini kamu ciken banyaak",
+            "Semoga hari ini kamu ciken banyaaak",
             "Semangat selalu, Jagoanku",
             "Aku sayang kamu dan olip dan una dan obi dan cimeng dan japrem",
             "Olip lagi apa sayang?",
@@ -257,7 +257,7 @@
             "Semangat terus, moal baleeeeg, basreng anyiiingg!",
             "Kalau hari ini terasa berat, ingat ada seseorang yang sangat mencintaimu.",
             "Bapak sama ibu diatas bangga sama kamu sudah berjuang sejauh ini.",
-            "Aku selalu tersenyum setiap kali mengingat kamu.",
+            "Aku selalu tersenyum setiap kali mengingat kamu, apalagi kalo ingat kamu ngomong janc.....",
             "Selamat pagi cantik, semoga hari ini memihak padamu.",
             "Sayangku, cintaku, duniaku, semestaku... jangan lupa makan ya!",
             "Semoga hari ini ada banyak alasan untuk tersenyum.",
@@ -292,9 +292,35 @@
             "Kucing-kucing itu mungkin tidak tahu, tapi mereka beruntung bertemu kamu.",
             "Aku suka bagaimana kamu tetap meluangkan perhatian untuk makhluk kecil yang sering diabaikan orang lain.",
             "Aku rasa kucing-kucing itu tahu bahwa mereka aman di dekatmu.",
-            "Kadang aku suka iri deh sama kucing di sana yang bisa kamu elus-elus tiap hari, padahal aku yang pacarnya aja ndakbisa,",
+            "Kadang aku suka iri deh sama kucing di sana yang bisa kamu elus-elus tiap hari, padahal aku yang pacarnya aja ndakbisa.",
             "I hope the kindness you give to others always finds its way back to you.",
-            "I hope the world treats you as kindly as you treat everyone around you."
+            "I hope the world treats you as kindly as you treat everyone around you.",
+            "Kalo kamu ngerasa dunia lagi ga berpihak kepadamu, ingat bumi teh buleudd.",
+            "Semangat pusrengnya nanti, inget cara aku ngeclutch di apart school.",
+            "Semangat gendong squadnya nanti sayang, apa yang udah dipelajari dari kuch terapkan ya!",
+            "Semoga malammu tenang, mimpinya indah.",
+            "Minum air putih yang banyak sayang, jangan keseringan kopi loh ya! 🫵🏽😠",
+            "Have a great day, semangat kerjanya sayang!",
+            "I know you're working hard. Don't forget to be kind to yourself too.",
+            "I'm proud of the effort you put in every day, even when nobody notices.",
+            "I believe in you, especially on the days you doubt yourself.",
+            "Wishing you a productive day and a peaceful mind.",
+            "I hope today brings you small wins and big smiles.",
+            "No matter how today goes, I'll still be proud of you.",
+            "I'm cheering for you from afar.",
+            "Work hard, but don't forget to take care of yourself for me.",
+            "I hope today is kind to you.",
+            "Remember that your worth is not measured by your productivity.",
+            "I hope your work today feels a little easier knowing someone is rooting for you.",
+            "I hope you give yourself the same kindness you give to everyone else.",
+            "Ada sebagian hatiku yang sekarang tinggal di Bandung, nemenin kamu.",
+            "Sayang nanti kita foto bareng di tembok kata-kata. gkmautau.",
+            "Semoga perjalananmu hari ini lancar dan hati kamu tetap ringan.",
+            "Semoga tidurmu nyenyak dan besok jadi hari yang lebih baik.",
+            "Kalau hari ini berat, semoga malam ini bisa jadi tempat kamu pulang dan tenang.",
+            "Aku kangen main bareng sama kamu. Kangen main roblox, main pabji, main uno yang aku jago terus itu.",
+            "Bandung beruntung punya kamu.",
+            "Sending you real tight hug from here."
         ];
 
         let pertamaKaliKlik = true;
@@ -327,7 +353,8 @@
                     jalankanMedia(); 
                     if (pertamaKaliKlik) {
                         const messageElement = document.getElementById('message');
-                        messageElement.innerText = dapatkanPesanHariIni();
+                        // Teks otomatis dibungkus dengan tanda kutip
+                        messageElement.innerText = '"' + dapatkanPesanHariIni() + '"';
                         messageElement.style.opacity = 1;
                         pertamaKaliKlik = false;
                     }
@@ -341,14 +368,15 @@
                 const messageElement = document.getElementById('message');
 
                 if (pertamaKaliKlik) {
-                    messageElement.innerText = dapatkanPesanHariIni();
+                    messageElement.innerText = '"' + dapatkanPesanHariIni() + '"';
                     messageElement.style.opacity = 1;
                     pertamaKaliKlik = false;
                 } else {
                     const indexRandom = Math.floor(Math.random() * pesan.length);
                     messageElement.style.opacity = 0;
                     setTimeout(() => {
-                        messageElement.innerText = pesan[indexRandom];
+                        // Teks otomatis dibungkus dengan tanda kutip
+                        messageElement.innerText = '"' + pesan[indexRandom] + '"';
                         messageElement.style.opacity = 1;
                     }, 250);
                 }
