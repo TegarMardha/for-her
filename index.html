@@ -176,7 +176,6 @@
             filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
         }
 
-        /* --- PERBAIKAN: LINTASAN LEBIH JAUH KE KANAN --- */
         @keyframes fallDiagonal {
             0% {
                 transform: translate(0, 0) scale(0.8);
@@ -189,7 +188,6 @@
                 opacity: 1;
             }
             100% {
-                /* Mengubah nilai 120vw menjadi 160vw agar lebih condong ke kanan */
                 transform: translate(160vw, 120vh) scale(1);
                 opacity: 0;
             }
@@ -220,9 +218,9 @@
     </audio>
 
     <script>
+        // Data kalimat dari kamu sudah dimasukkan semua ke sini
         const pesan = [
             "Aku kangen kamu hari ini.",
-            "Jarak cuma angka, perasaanku ke kamu nyata.",
             "Semangat ya hari ini! You got this jagoaaan.",
             "Jangan lupa makan yang bener, aku ndak mau kamu sakit.",
             "Suara tawa kamu itu hal favorit aku di dunia.",
@@ -236,8 +234,25 @@
             "Semoga hari ini kamu ciken banyaak",
             "Semangat selalu, Jagoanku",
             "Aku sayang kamu dan olip dan una dan obi dan cimeng dan japrem",
-            "Olip lagi apa sayang?"
-            // Tambahkan terus sampai 500 kalimat...
+            "Olip lagi apa sayang?",
+            "Nanti kita keliling dunia ya",
+            "Makan apa hari ini sayang",
+            "Jangan lupa makan enak yaaa",
+            "Don't push urself, remember u need to rest okay?",
+            "The moon always reminds me of u",
+            "I tell the moon I missed u",
+            "Atleast we still under the same sky",
+            "I love you more than words know how to say",
+            "Bicara denganmu selalu menenangkan, terimakasih sayang",
+            "I fall for you a little more every single day",
+            "You have my whole heart, always.",
+            "Bagaimana bisa kamu menganggap kamu no life, sedangkan kamu adalah my whole life 😏",
+            "You're the kind of person my soul feels calm around.",
+            "I love you in every universeeee",
+            "Sayang aku kangen olip",
+            "Kalau kangen, lihat langit ya. Kita ada di bawah langit yang sama.",
+            "Ping pabji boleh ngelag, tapi ping cintaku ke kamu tetep 1ms 😏",
+            "Coba senyum bentar deh natep layar HP-nya... nah gitu dong, kan kelihatan cantiknya sampai sini"
         ];
 
         let pertamaKaliKlik = true;
