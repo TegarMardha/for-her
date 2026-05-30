@@ -63,7 +63,7 @@
             z-index: 10;
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            position: relative; /* Penting untuk lapisan anak */
+            position: relative; 
             
             -webkit-tap-highlight-color: transparent;
             user-select: none; 
@@ -84,7 +84,7 @@
             background-position: center;
             background-repeat: no-repeat;
             border-radius: 50%;
-            z-index: 1; /* Di belakang teks */
+            z-index: 1; 
             transition: transform 0.5s ease;
         }
 
@@ -99,7 +99,7 @@
         /* --- TEKS PESAN & LAGU --- */
         #message {
             position: relative;
-            z-index: 2; /* Di depan gambar bulan */
+            z-index: 2; 
             font-size: 1.7em;
             color: #ffffff; 
             line-height: 1.2;
@@ -107,13 +107,13 @@
             text-shadow: 2px 2px 8px rgba(0, 0, 0, 1), 0px 0px 10px rgba(0,0,0,0.8);
             opacity: 0; 
             transition: opacity 0.4s ease;
-            pointer-events: none; /* Tembus klik ke container kecuali tombol play */
+            pointer-events: none; 
             font-weight: normal;
             width: 100%;
         }
 
         .play-btn {
-            pointer-events: auto; /* Agar tombol play bisa diklik */
+            pointer-events: auto; 
             display: inline-block;
             font-size: 1.8em;
             margin-top: 15px;
@@ -236,12 +236,11 @@
         <span id="days-count">129</span>
     </div>
 
-    <audio id="bg-music" loop>
-        <source src="lagu.mp3" type="audio/mpeg">
+    <audio id="music-player" loop>
+        <source src="" type="audio/mpeg">
     </audio>
 
     <script>
-        // Data disusun dalam bentuk objek agar bisa mendeteksi Teks biasa vs Lagu
         const pesan = [
             // --- KUMPULAN TEKS ---
             { type: 'text', text: "Aku kangen kamu hari ini." },
@@ -351,30 +350,30 @@
             { type: 'text', text: "Semoga hari ini dan seterusnya tetep jagoan." },
             { type: 'text', text: "Jagoan aku ndakboleh menyerah." },
             
-            // --- KUMPULAN LAGU ---
-            { type: 'song', artist: "Sal Priadi", title: "Mesra-mesraannya kecil-kecilan dulu" },
-            { type: 'song', artist: "Sal Priadi", title: "Ada titik-titik di ujung doa" },
-            { type: 'song', artist: "Sal Priadi", title: "Besok kita pergi makan" },
-            { type: 'song', artist: "Sal Priadi", title: "Semua lagu cinta" },
-            { type: 'song', artist: "Sal Priadi", title: "I'd like to watch you sleeping" },
-            { type: 'song', artist: "Sal Priadi", title: "Hi, selamat pagiii" },
-            { type: 'song', artist: "Reality Club", title: "Anything You Want" },
-            { type: 'song', artist: "Reality Club", title: "Alexandra" },
-            { type: 'song', artist: "Reality Club", title: "Am I Bothering You?" },
-            { type: 'song', artist: "Arctic Monkeys", title: "I Wanna Be Yours" },
-            { type: 'song', artist: "Arctic Monkeys", title: "R U Mine?" },
-            { type: 'song', artist: "Arctic Monkeys", title: "Mardy Bum" },
-            { type: 'song', artist: "Arctic Monkeys", title: "Baby I'm Yours" },
-            { type: 'song', artist: "Coldplay", title: "Amazing Day" },
-            { type: 'song', artist: "Rex Orange County", title: "Happiness" },
-            { type: 'song', artist: "Daniel Caesar, Rex Orange County", title: "Rearrange My World" },
-            { type: 'song', artist: "Rex Orange County", title: "Sunflower" },
-            { type: 'song', artist: "Rex Orange County", title: "ONE IN A MILLION" },
-            { type: 'song', artist: "Daniel Caesar", title: "Best Part" },
-            { type: 'song', artist: "Daniel Caesar", title: "Superpowers" },
-            { type: 'song', artist: "Daniel Caesar", title: "Blessed" },
-            { type: 'song', artist: "Daniel Caesar", title: "Moon" },
-            { type: 'song', artist: "Frank Ocean", title: "Godspeed" }
+            // --- KUMPULAN LAGU (Ganti nama file .mp3 di sini sesuai yang kamu upload di GitHub) ---
+            { type: 'song', artist: "Sal Priadi", title: "Mesra-mesraannya kecil-kecilan dulu", file: "mesra.mp3" },
+            { type: 'song', artist: "Sal Priadi", title: "Ada titik-titik di ujung doa", file: "titik.mp3" },
+            { type: 'song', artist: "Sal Priadi", title: "Besok kita pergi makan", file: "besok.mp3" },
+            { type: 'song', artist: "Sal Priadi", title: "Semua lagu cinta", file: "semua-lagu.mp3" },
+            { type: 'song', artist: "Sal Priadi", title: "I'd like to watch you sleeping", file: "watch.mp3" },
+            { type: 'song', artist: "Sal Priadi", title: "Hi, selamat pagiii", file: "pagi.mp3" },
+            { type: 'song', artist: "Reality Club", title: "Anything You Want", file: "anything.mp3" },
+            { type: 'song', artist: "Reality Club", title: "Alexandra", file: "alexandra.mp3" },
+            { type: 'song', artist: "Reality Club", title: "Am I Bothering You?", file: "bothering.mp3" },
+            { type: 'song', artist: "Arctic Monkeys", title: "I Wanna Be Yours", file: "wanna-be-yours.mp3" },
+            { type: 'song', artist: "Arctic Monkeys", title: "R U Mine?", file: "ru-mine.mp3" },
+            { type: 'song', artist: "Arctic Monkeys", title: "Mardy Bum", file: "mardy-bum.mp3" },
+            { type: 'song', artist: "Arctic Monkeys", title: "Baby I'm Yours", file: "baby-im-yours.mp3" },
+            { type: 'song', artist: "Coldplay", title: "Amazing Day", file: "amazing-day.mp3" },
+            { type: 'song', artist: "Rex Orange County", title: "Happiness", file: "happiness.mp3" },
+            { type: 'song', artist: "Daniel Caesar, Rex", title: "Rearrange My World", file: "rearrange.mp3" },
+            { type: 'song', artist: "Rex Orange County", title: "Sunflower", file: "sunflower.mp3" },
+            { type: 'song', artist: "Rex Orange County", title: "ONE IN A MILLION", file: "million.mp3" },
+            { type: 'song', artist: "Daniel Caesar", title: "Best Part", file: "best-part.mp3" },
+            { type: 'song', artist: "Daniel Caesar", title: "Superpowers", file: "superpowers.mp3" },
+            { type: 'song', artist: "Daniel Caesar", title: "Blessed", file: "blessed.mp3" },
+            { type: 'song', artist: "Daniel Caesar", title: "Moon", file: "moon.mp3" },
+            { type: 'song', artist: "Frank Ocean", title: "Godspeed", file: "godspeed.mp3" }
         ];
 
         let pertamaKaliKlik = true;
@@ -392,22 +391,21 @@
             return pesan[indexHariIni];
         }
 
+        // Fungsi ini sekarang hanya menjalankan video background
         function jalankanMedia() {
-            const musik = document.getElementById('bg-music');
             const video = document.getElementById('bg-video');
-            if (musik && musik.paused) musik.play().catch(e => console.log(e));
             if (video && video.paused) video.play().catch(e => console.log(e));
         }
 
-        // --- FUNGSI BARU KHUSUS UNTUK TOMBOL PLAY/PAUSE LAGU ---
+        // --- FUNGSI PLAY/PAUSE MUSIK (Hanya jalan kalau dipencet) ---
         function toggleMusic(e) {
-            e.stopPropagation(); // Mencegah double tap background terpicu
-            const musik = document.getElementById('bg-music');
+            e.stopPropagation(); 
+            const musik = document.getElementById('music-player');
             const btn = document.getElementById('play-btn-icon');
             const moonBg = document.getElementById('moon-bg');
 
             if (musik.paused) {
-                musik.play();
+                musik.play().catch(e => console.log("Gagal play: ", e));
                 btn.innerText = '⏸️';
                 moonBg.classList.add('spinning');
             } else {
@@ -421,28 +419,24 @@
         function renderPesan(dataObj) {
             const messageElement = document.getElementById('message');
             const moonBg = document.getElementById('moon-bg');
-            const musik = document.getElementById('bg-music');
+            const musik = document.getElementById('music-player');
+
+            // PAUSE musik apa pun saat berpindah pesan & matikan putaran bulan
+            musik.pause();
+            moonBg.classList.remove('spinning');
 
             if (dataObj.type === 'song') {
-                // Jika data adalah lagu
-                const isPlaying = musik && !musik.paused;
-                const icon = isPlaying ? '⏸️' : '▶️';
+                // Setel sumber file lagu
+                musik.src = dataObj.file;
                 
-                // Putar bulan jika lagu sedang berjalan
-                if (isPlaying) {
-                    moonBg.classList.add('spinning');
-                } else {
-                    moonBg.classList.remove('spinning');
-                }
-
+                // Lagu TIDAK di-play otomatis, memunculkan ikon ▶️
                 messageElement.innerHTML = `
                     <div style="font-size: 0.8em; color: #ffeb3b; letter-spacing: 1px; text-transform: uppercase;">🎵 ${dataObj.artist}</div>
                     <div style="font-size: 1.2em; font-weight: bold; margin: 15px 0;">${dataObj.title}</div>
-                    <div class="play-btn" onclick="toggleMusic(event)" id="play-btn-icon">${icon}</div>
+                    <div class="play-btn" onclick="toggleMusic(event)" id="play-btn-icon">▶️</div>
                 `;
             } else {
-                // Jika data adalah teks biasa, bungkus dengan tanda kutip dan matikan putaran bulan
-                moonBg.classList.remove('spinning');
+                // Teks otomatis dibungkus dengan tanda kutip
                 messageElement.innerHTML = `"${dataObj.text}"`;
             }
         }
@@ -475,7 +469,6 @@
                     const indexRandom = Math.floor(Math.random() * pesan.length);
                     messageElement.style.opacity = 0;
                     
-                    // Tunggu animasi transisi hilang sebentar baru render teks baru
                     setTimeout(() => {
                         renderPesan(pesan[indexRandom]);
                         messageElement.style.opacity = 1;
@@ -520,7 +513,6 @@
                 bubble.classList.remove('show');
             }
 
-            // Batalkan jatuhan bintang jika memencet bulan, love, atau tombol play
             if (e.target.closest('.moon-container') || e.target.closest('.heart-container') || e.target.closest('.play-btn')) {
                 return;
             }
