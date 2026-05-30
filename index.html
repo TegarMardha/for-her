@@ -107,19 +107,21 @@
             text-shadow: 2px 2px 8px rgba(0, 0, 0, 1), 0px 0px 10px rgba(0,0,0,0.8);
             opacity: 0; 
             transition: opacity 0.4s ease;
-            pointer-events: none; 
             font-weight: normal;
             width: 100%;
         }
 
         .play-btn {
-            pointer-events: auto; 
+            position: relative;
+            z-index: 10;
             display: inline-block;
             font-size: 1.8em;
             margin-top: 15px;
             cursor: pointer;
             transition: transform 0.2s ease;
             filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.8));
+            touch-action: manipulation; 
+            -webkit-tap-highlight-color: transparent;
         }
         .play-btn:active {
             transform: scale(0.8);
@@ -350,7 +352,7 @@
             { type: 'text', text: "Semoga hari ini dan seterusnya tetep jagoan." },
             { type: 'text', text: "Jagoan aku ndakboleh menyerah." },
             
-            // --- KUMPULAN LAGU (Ganti nama file .mp3 di sini sesuai yang kamu upload di GitHub) ---
+            // --- KUMPULAN LAGU ---
             { type: 'song', artist: "Sal Priadi", title: "Mesra-mesraannya kecil-kecilan dulu", file: "mesra.mp3" },
             { type: 'song', artist: "Sal Priadi", title: "Ada titik-titik di ujung doa", file: "titik.mp3" },
             { type: 'song', artist: "Sal Priadi", title: "Besok kita pergi makan", file: "besok.mp3" },
@@ -381,6 +383,23 @@
         let clickTimer = null;
         let bubbleTimer = null; 
 
+        // --- SISTEM SINKRONISASI UI AUDIO (ANTI-BUG MOBILE) ---
+        const musicPlayer = document.getElementById('music-player');
+        
+        musicPlayer.addEventListener('play', () => {
+            const btn = document.getElementById('play-btn-icon');
+            const moonBg = document.getElementById('moon-bg');
+            if (btn) btn.innerText = '⏸️';
+            if (moonBg) moonBg.classList.add('spinning');
+        });
+
+        musicPlayer.addEventListener('pause', () => {
+            const btn = document.getElementById('play-btn-icon');
+            const moonBg = document.getElementById('moon-bg');
+            if (btn) btn.innerText = '▶️';
+            if (moonBg) moonBg.classList.remove('spinning');
+        });
+
         function dapatkanPesanHariIni() {
             const hariIni = new Date();
             const seedString = hariIni.getFullYear().toString() + hariIni.getMonth().toString() + hariIni.getDate().toString();
@@ -391,52 +410,43 @@
             return pesan[indexHariIni];
         }
 
-        // Fungsi ini sekarang hanya menjalankan video background
         function jalankanMedia() {
             const video = document.getElementById('bg-video');
             if (video && video.paused) video.play().catch(e => console.log(e));
         }
 
-        // --- FUNGSI PLAY/PAUSE MUSIK (Hanya jalan kalau dipencet) ---
+        // --- FUNGSI PLAY/PAUSE DIPERBAIKI ---
         function toggleMusic(e) {
-            e.stopPropagation(); 
+            e.preventDefault();
+            e.stopPropagation(); // Mencegah terpicunya skip kata-kata
             const musik = document.getElementById('music-player');
-            const btn = document.getElementById('play-btn-icon');
-            const moonBg = document.getElementById('moon-bg');
 
             if (musik.paused) {
-                musik.play().catch(e => console.log("Gagal play: ", e));
-                btn.innerText = '⏸️';
-                moonBg.classList.add('spinning');
+                // Menangani error jika file belum beres loading
+                const playPromise = musik.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => console.log("Menunggu audio siap...", error));
+                }
             } else {
                 musik.pause();
-                btn.innerText = '▶️';
-                moonBg.classList.remove('spinning');
             }
         }
 
-        // --- FUNGSI RENDER TAMPILAN PESAN/LAGU ---
         function renderPesan(dataObj) {
             const messageElement = document.getElementById('message');
-            const moonBg = document.getElementById('moon-bg');
             const musik = document.getElementById('music-player');
 
-            // PAUSE musik apa pun saat berpindah pesan & matikan putaran bulan
+            // Selalu matikan musik saat berpindah (UI akan otomatis ter-update berkat event listener)
             musik.pause();
-            moonBg.classList.remove('spinning');
 
             if (dataObj.type === 'song') {
-                // Setel sumber file lagu
                 musik.src = dataObj.file;
-                
-                // Lagu TIDAK di-play otomatis, memunculkan ikon ▶️
                 messageElement.innerHTML = `
                     <div style="font-size: 0.8em; color: #ffeb3b; letter-spacing: 1px; text-transform: uppercase;">🎵 ${dataObj.artist}</div>
                     <div style="font-size: 1.2em; font-weight: bold; margin: 15px 0;">${dataObj.title}</div>
                     <div class="play-btn" onclick="toggleMusic(event)" id="play-btn-icon">▶️</div>
                 `;
             } else {
-                // Teks otomatis dibungkus dengan tanda kutip
                 messageElement.innerHTML = `"${dataObj.text}"`;
             }
         }
@@ -506,7 +516,7 @@
             hitungHari();
         };
 
-        // --- INTERAKSI BACKGROUND (BINTANG JATUH / BUBU DUDU) ---
+        // --- INTERAKSI BACKGROUND ---
         document.body.addEventListener('click', function(e) {
             const bubble = document.getElementById('heart-bubble');
             if (bubble && bubble.classList.contains('show') && !e.target.closest('.heart-container')) {
