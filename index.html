@@ -109,6 +109,58 @@
             pointer-events: none; 
         }
 
+        /* --- BUBBLE CHAT INTERAKTIF DI LOVE HITAM --- */
+        .heart-container {
+            position: relative;
+            cursor: pointer;
+            pointer-events: auto; /* Agar si love bisa dipencet, mengesampingkan parent-nya */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .pixel-bubble {
+            position: absolute;
+            bottom: 150%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background-color: #ff4757; /* Warna merah retro */
+            color: #ffffff;
+            padding: 8px 12px;
+            font-size: 0.6em; /* Skala relatif terhadap angka days-counter */
+            line-height: 1.2;
+            width: max-content;
+            max-width: 200px;
+            text-align: center;
+            border: 2px solid #ffffff; /* Border putih tajam khas pixelated */
+            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            border-radius: 0; /* Tanpa lengkungan agar kotak kaku ala 8-bit */
+            z-index: 200;
+            letter-spacing: 1px;
+            text-shadow: none; /* Menghilangkan shadow teks dari parent */
+        }
+
+        /* Buntut segitiga untuk bubble chat */
+        .pixel-bubble::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 6px;
+            border-style: solid;
+            /* Set warna buntut jadi merah seperti kotak atasnya */
+            border-color: #ff4757 transparent transparent transparent; 
+        }
+
+        /* State saat bubble chat dimunculkan */
+        .pixel-bubble.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
         /* --- CSS EFEK BINTANG / BUBU DUDU --- */
         .falling-object {
             position: absolute;
@@ -157,7 +209,11 @@
     </div>
 
     <div class="day-counter">
-        <span>🖤</span> <span id="days-count">129</span>
+        <div class="heart-container" onclick="toggleBubble(event)">
+            <span>🖤</span>
+            <div id="heart-bubble" class="pixel-bubble">days since our heart met, and still counting...</div>
+        </div>
+        <span id="days-count">129</span>
     </div>
 
     <audio id="bg-music" loop>
@@ -182,6 +238,7 @@
         let pertamaKaliKlik = true;
         let clickCount = 0;
         let clickTimer = null;
+        let bubbleTimer = null; // Timer khusus untuk bubble
 
         function dapatkanPesanHariIni() {
             const hariIni = new Date();
@@ -251,13 +308,36 @@
             document.getElementById('days-count').innerText = hariMulaiNilai + selisihHari;
         }
 
+        // --- FUNGSI BARU UNTUK MEMUNCULKAN BUBBLE CHAT ---
+        function toggleBubble(e) {
+            e.stopPropagation(); // Cegah klik ini memicu fungsi background (bintang jatuh)
+            
+            const bubble = document.getElementById('heart-bubble');
+            bubble.classList.add('show');
+            
+            // Reset timer jika user menekan berkali-kali agar tidak nge-glitch
+            if (bubbleTimer) clearTimeout(bubbleTimer);
+            
+            // Otomatis hilangkan bubble setelah 3 detik
+            bubbleTimer = setTimeout(() => {
+                bubble.classList.remove('show');
+            }, 3000);
+        }
+
         window.onload = function() {
             hitungHari();
         };
 
-        // --- LOGIKA BARU: INTERAKSI BACKGROUND (BINTANG JATUH / BUBU DUDU) ---
+        // --- INTERAKSI BACKGROUND (BINTANG JATUH / BUBU DUDU) ---
         document.body.addEventListener('click', function(e) {
-            if (e.target.closest('.moon-container')) {
+            // Sembunyikan bubble text secara paksa jika user mengetuk layar manapun selain area love
+            const bubble = document.getElementById('heart-bubble');
+            if (bubble && bubble.classList.contains('show') && !e.target.closest('.heart-container')) {
+                bubble.classList.remove('show');
+            }
+
+            // Batalkan efek jatuh jika yang diklik adalah Bulan atau Love Hitam
+            if (e.target.closest('.moon-container') || e.target.closest('.heart-container')) {
                 return;
             }
 
@@ -270,7 +350,6 @@
             flyingObj.src = isBubu ? 'bubududu.png' : 'star.png';
             flyingObj.className = 'falling-object ' + (isBubu ? 'bubu-img' : 'star-img');
 
-            // --- PERBAIKAN: Posisi kemunculan difokuskan di bagian atas (-10vh sampai 20vh) ---
             const randomY = Math.floor(Math.random() * 30) - 10;
             flyingObj.style.top = randomY + 'vh';
             
