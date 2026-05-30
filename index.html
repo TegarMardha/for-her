@@ -352,26 +352,26 @@
             { type: 'text', text: "Semoga hari ini dan seterusnya tetep jagoan." },
             { type: 'text', text: "Jagoan aku ndakboleh menyerah." },
             
-            // --- KUMPULAN LAGU ---
-            { type: 'song', artist: "Sal Priadi", title: "Mesra-mesraannya kecil-kecilan dulu", file: "mesra.mp3" },
-            { type: 'song', artist: "Sal Priadi", title: "Ada titik-titik di ujung doa", file: "titik.mp3" },
-            { type: 'song', artist: "Sal Priadi", title: "Besok kita pergi makan", file: "besok.mp3" },
-            { type: 'song', artist: "Sal Priadi", title: "Semua lagu cinta", file: "semua-lagu.mp3" },
-            { type: 'song', artist: "Sal Priadi", title: "I'd like to watch you sleeping", file: "watch.mp3" },
-            { type: 'song', artist: "Sal Priadi", title: "Hi, selamat pagiii", file: "pagi.mp3" },
-            { type: 'song', artist: "Reality Club", title: "Anything You Want", file: "anything.mp3" },
+            // --- KUMPULAN LAGU (Diupdate persis sesuai nama file dari gambar) ---
+            { type: 'song', artist: "Sal Priadi", title: "Mesra-mesraannya kecil-kecilan dulu", file: "mesramesranya.mp3" },
+            { type: 'song', artist: "Sal Priadi", title: "Ada titik-titik di ujung doa", file: "adatitiktitik.mp3" },
+            { type: 'song', artist: "Sal Priadi", title: "Besok kita pergi makan", file: "besokkitapergi.mp3" },
+            { type: 'song', artist: "Sal Priadi", title: "Semua lagu cinta", file: "semualagucinta.mp3" },
+            { type: 'song', artist: "Sal Priadi", title: "I'd like to watch you sleeping", file: "likewatchyousleep.mp3" },
+            { type: 'song', artist: "Sal Priadi", title: "Hi, selamat pagiii", file: "hiselamatpagi.mp3" },
+            { type: 'song', artist: "Reality Club", title: "Anything You Want", file: "anythingyouwant.mp3" },
             { type: 'song', artist: "Reality Club", title: "Alexandra", file: "alexandra.mp3" },
-            { type: 'song', artist: "Reality Club", title: "Am I Bothering You?", file: "bothering.mp3" },
-            { type: 'song', artist: "Arctic Monkeys", title: "I Wanna Be Yours", file: "wanna-be-yours.mp3" },
-            { type: 'song', artist: "Arctic Monkeys", title: "R U Mine?", file: "ru-mine.mp3" },
-            { type: 'song', artist: "Arctic Monkeys", title: "Mardy Bum", file: "mardy-bum.mp3" },
-            { type: 'song', artist: "Arctic Monkeys", title: "Baby I'm Yours", file: "baby-im-yours.mp3" },
-            { type: 'song', artist: "Coldplay", title: "Amazing Day", file: "amazing-day.mp3" },
+            { type: 'song', artist: "Reality Club", title: "Am I Bothering You?", file: "amibotheringyou.mp3" },
+            { type: 'song', artist: "Arctic Monkeys", title: "I Wanna Be Yours", file: "iwannabeyours.mp3" },
+            { type: 'song', artist: "Arctic Monkeys", title: "R U Mine?", file: "rumine.mp3" },
+            { type: 'song', artist: "Arctic Monkeys", title: "Mardy Bum", file: "mardybum.mp3" },
+            { type: 'song', artist: "Arctic Monkeys", title: "Baby I'm Yours", file: "babyimyours.mp3" },
+            { type: 'song', artist: "Coldplay", title: "Amazing Day", file: "amazingday.mp3" },
             { type: 'song', artist: "Rex Orange County", title: "Happiness", file: "happiness.mp3" },
-            { type: 'song', artist: "Daniel Caesar, Rex", title: "Rearrange My World", file: "rearrange.mp3" },
+            { type: 'song', artist: "Daniel Caesar, Rex Orange County", title: "Rearrange My World", file: "rearrangemyworld.mp3" },
             { type: 'song', artist: "Rex Orange County", title: "Sunflower", file: "sunflower.mp3" },
-            { type: 'song', artist: "Rex Orange County", title: "ONE IN A MILLION", file: "million.mp3" },
-            { type: 'song', artist: "Daniel Caesar", title: "Best Part", file: "best-part.mp3" },
+            { type: 'song', artist: "Rex Orange County", title: "ONE IN A MILLION", file: "oneinamillion.mp3" },
+            { type: 'song', artist: "Daniel Caesar", title: "Best Part", file: "bestpart.mp3" },
             { type: 'song', artist: "Daniel Caesar", title: "Superpowers", file: "superpowers.mp3" },
             { type: 'song', artist: "Daniel Caesar", title: "Blessed", file: "blessed.mp3" },
             { type: 'song', artist: "Daniel Caesar", title: "Moon", file: "moon.mp3" },
@@ -422,7 +422,6 @@
             const musik = document.getElementById('music-player');
 
             if (musik.paused) {
-                // Menangani error jika file belum beres loading
                 const playPromise = musik.play();
                 if (playPromise !== undefined) {
                     playPromise.catch(error => console.log("Menunggu audio siap...", error));
@@ -436,7 +435,6 @@
             const messageElement = document.getElementById('message');
             const musik = document.getElementById('music-player');
 
-            // Selalu matikan musik saat berpindah (UI akan otomatis ter-update berkat event listener)
             musik.pause();
 
             if (dataObj.type === 'song') {
