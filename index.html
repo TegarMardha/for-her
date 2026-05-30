@@ -93,7 +93,8 @@
             100% { transform: rotate(360deg); }
         }
         .spinning {
-            animation: spinMoon 8s linear infinite;
+            /* UPDATE: Diperlambat menjadi 25s */
+            animation: spinMoon 25s linear infinite;
         }
 
         /* --- TEKS PESAN & LAGU --- */
@@ -149,6 +150,22 @@
             cursor: pointer;
             pointer-events: auto; 
             -webkit-tap-highlight-color: transparent;
+        }
+
+        /* BARU: CSS untuk animasi detak jantung */
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            15% { transform: scale(1.25); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.15); }
+            60% { transform: scale(1); }
+            100% { transform: scale(1); }
+        }
+
+        .heart-container span {
+            display: inline-block; /* Wajib untuk animasi scale */
+            /* Terapkan animasi detak jantung */
+            animation: heartbeat 1.5s ease-in-out infinite;
         }
 
         .pixel-bubble {
@@ -312,7 +329,7 @@
             { type: 'text', text: "Kamu boleh capek, kamu boleh sedih, tapi kamu nggak boleh nyerah. Aku tahu kamu pasti bisa." },
             { type: 'text', text: "Aku tahu belakangan ini berat banget buat kamu, but look at you, kamu bisa lewatin semuanya. Aku bangga banget sama kamu!" },
             { type: 'text', text: "Setiap kali liat kamu berusaha keras, rasanya aku makin jatuh cinta. Bangga banget punya pacar kayak kamu." },
-            { type: 'text', text: "Cuma mau ngingetin: aku bangga sama kamu kemarin, hari ini, dan besok. Terus semangat ya, sayang." },
+            { type: 'text', text: "Cuma mau ngingetin: aku bangga sama kamu kemarin, hari ini, and besok. Terus semangat ya, sayang." },
             { type: 'text', text: "Ndak semua orang bisa sekuat kamu ngadepin ini semua. Makasih ya udah bertahan. Aku bangga!" },
             { type: 'text', text: "Kalau hari ini belum ada yang bilang, biar aku yang bilang: Kamu luar biasa, dan aku bangga banget sama kamu." },
             { type: 'text', text: "Kucing-kucing itu mungkin tidak tahu, tapi mereka beruntung bertemu kamu." },
