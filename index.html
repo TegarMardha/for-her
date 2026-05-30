@@ -47,18 +47,12 @@
             pointer-events: none; 
         }
 
-        /* --- CONTAINER BULAN --- */
+        /* --- CONTAINER UTAMA BULAN --- */
         .moon-container {
             width: 85vw;
             max-width: 380px;
-            
             aspect-ratio: 1 / 1; 
             border-radius: 50%; 
-            
-            background-image: url('bulan.png'); 
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
             box-shadow: 0 0 50px rgba(255, 255, 230, 0.3), inset 0 0 30px rgba(0,0,0,0.5);
             
             display: flex;
@@ -69,6 +63,7 @@
             z-index: 10;
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative; /* Penting untuk lapisan anak */
             
             -webkit-tap-highlight-color: transparent;
             user-select: none; 
@@ -80,8 +75,31 @@
             box-shadow: 0 0 30px rgba(255, 255, 230, 0.2);
         }
 
-        /* --- TEKS PESAN --- */
+        /* --- LAPISAN GAMBAR BULAN (BISA BERPUTAR) --- */
+        #moon-bg {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('bulan.png'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 50%;
+            z-index: 1; /* Di belakang teks */
+            transition: transform 0.5s ease;
+        }
+
+        /* Animasi putar untuk bulan saat lagu menyala */
+        @keyframes spinMoon {
+            100% { transform: rotate(360deg); }
+        }
+        .spinning {
+            animation: spinMoon 8s linear infinite;
+        }
+
+        /* --- TEKS PESAN & LAGU --- */
         #message {
+            position: relative;
+            z-index: 2; /* Di depan gambar bulan */
             font-size: 1.7em;
             color: #ffffff; 
             line-height: 1.2;
@@ -89,8 +107,22 @@
             text-shadow: 2px 2px 8px rgba(0, 0, 0, 1), 0px 0px 10px rgba(0,0,0,0.8);
             opacity: 0; 
             transition: opacity 0.4s ease;
-            pointer-events: none; 
+            pointer-events: none; /* Tembus klik ke container kecuali tombol play */
             font-weight: normal;
+            width: 100%;
+        }
+
+        .play-btn {
+            pointer-events: auto; /* Agar tombol play bisa diklik */
+            display: inline-block;
+            font-size: 1.8em;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.8));
+        }
+        .play-btn:active {
+            transform: scale(0.8);
         }
 
         /* --- COUNTER DAYS --- */
@@ -177,20 +209,10 @@
         }
 
         @keyframes fallDiagonal {
-            0% {
-                transform: translate(0, 0) scale(0.8);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            80% {
-                opacity: 1;
-            }
-            100% {
-                transform: translate(160vw, 120vh) scale(1);
-                opacity: 0;
-            }
+            0% { transform: translate(0, 0) scale(0.8); opacity: 0; }
+            10% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translate(160vw, 120vh) scale(1); opacity: 0; }
         }
     </style>
 </head>
@@ -202,6 +224,7 @@
     <h1>Hai, Lunar</h1>
 
     <div class="moon-container" onclick="handleMoonClick()">
+        <div id="moon-bg"></div>
         <div id="message"></div>
     </div>
 
@@ -218,109 +241,140 @@
     </audio>
 
     <script>
+        // Data disusun dalam bentuk objek agar bisa mendeteksi Teks biasa vs Lagu
         const pesan = [
-            "Aku kangen kamu hari ini.",
-            "Semangat ya hari ini! You got this jagoaaan.",
-            "Jangan lupa makan yang bener, aku ndak mau kamu sakit.",
-            "Suara tawa kamu itu hal favorit aku di dunia.",
-            "Semoga mimpi indah ya nanti malam, Sayang.",
-            "Aku selalu bangga punya kamu.",
-            "Inget ya, aku di sini selalu dukung kamu.",
-            "Setiap detik tanpamu terasa sangat lama.",
-            "Aku udah siapin banyak pelukan saat kita ketemu nanti.",
-            "Your laugh unforgettable",
-            "I miss ur voices bb",
-            "Semoga hari ini kamu ciken banyaaak",
-            "Semangat selalu, Jagoanku",
-            "Aku sayang kamu dan olip dan una dan obi dan cimeng dan japrem",
-            "Olip lagi apa sayang?",
-            "Nanti kita keliling dunia ya",
-            "Makan apa hari ini sayang",
-            "Jangan lupa makan enak yaaa",
-            "Don't push urself, remember u need to rest okay?",
-            "The moon always reminds me of u",
-            "I tell the moon I missed u",
-            "Atleast we still under the same sky",
-            "I love you more than words know how to say",
-            "Bicara denganmu selalu menenangkan, terimakasih sayang",
-            "I fall for you a little more every single day",
-            "You have my whole heart, always.",
-            "Bagaimana bisa kamu menganggap kamu no life, sedangkan kamu adalah my whole life 😏",
-            "You're the kind of person my soul feels calm around.",
-            "I love you in every universeeee",
-            "Sayang aku kangen olip",
-            "Kalau kangen, lihat langit ya. Kita ada di bawah langit yang sama.",
-            "Ping pabji boleh ngelag, tapi ping cintaku ke kamu tetep 1ms 😏",
-            "Coba senyum bentar deh natep layar HP-nya... nah gitu dong, kan kelihatan cantiknya sampai sini",
-            "Disini gada dimsum mentai, Sayang.",
-            "Dari semua kucing yang pernah aku elus, cuma kamu yang paling gemesin hhhhhhhh",
-            "Semangat terus, moal baleeeeg, basreng anyiiingg!",
-            "Kalau hari ini terasa berat, ingat ada seseorang yang sangat mencintaimu.",
-            "Bapak sama ibu diatas bangga sama kamu sudah berjuang sejauh ini.",
-            "Aku selalu tersenyum setiap kali mengingat kamu, apalagi kalo ingat kamu ngomong janc.....",
-            "Selamat pagi cantik, semoga hari ini memihak padamu.",
-            "Sayangku, cintaku, duniaku, semestaku... jangan lupa makan ya!",
-            "Semoga hari ini ada banyak alasan untuk tersenyum.",
-            "Satu langkah kecil hari ini tetap lebih baik daripada tidak melangkah sama sekali.",
-            "Semoga semua hal baik menemukan jalan menuju kamu hari ini.",
-            "Terimakasih selalu menjadi orang baik sayang",
-            "Jangan terlalu keras pada dirimu sendiri.",
-            "Kamu sudah melakukan yang terbaik hari ini.",
-            "Jangan lupa minum air, tanaman saja disiram masa pacarku ndak.",
-            "Sayang selama ini ada yg aku resahin, aku mau protes, kenapa kamu bisa secantik itu?",
-            "Aku udah cek ramalan cuaca, hari ini kemungkinan besar kamu tetap menggemaskan.",
-            "Jangan lupa makan, cantik ndak dipakai sebagai sumber energi.",
-            "Kamu sudah melewati banyak hal sulit sebelumnya.",
-            "Cara kamu memperlakukan orang lain selalu membuatku kagum.",
-            "Aku menghargai semua usaha kecil yang mungkin tidak disadari orang lain.",
-            "Kamu punya hati yang baik, jangan pernah meragukannya.",
-            "Kehadiranmu membuat hidupku lebih berwarna, aku bersyukur bisa mengenalmu.",
-            "Pagi! Jangan lupa minum air putih, tarik napas, dan ingat kalau aku sayang kamu.",
-            "Bangun sayang, dunia butuh senyum manismu hari ini. Semangat!",
-            "Hari ini pasti capek banget ya? Sekarang waktunya log out dari urusan dunia dan istirahat. Good night, sayang.",
-            "Udah malem, matikan layarnya dan jangan begadang terus. Tidur ya, biar besok tetep jagoan terus.",
-            "Sleep well, cintaku. Semoga di mimpimu malam ini kita bisa jalan berdua cari makan enak.",
-            "Jangan lupa berdoa sebelum tidur. Semoga besok lebih baik dari hari ini. Night, love.",
-            "Hari ini mungkin berat, tapi aku tahu kamu jauh lebih kuat dari apa pun yang kamu hadapin hari ini.",
-            "Gapapa nangis atau ngeluh sebentar. Tumpahin aja semuanya ke aku. Setelah itu kita bangkit lagi, ya.",
-            "Kamu boleh capek, kamu boleh sedih, tapi kamu nggak boleh nyerah. Aku tahu kamu pasti bisa.",
-            "Aku tahu belakangan ini berat banget buat kamu, but look at you, kamu bisa lewatin semuanya. Aku bangga banget sama kamu!",
-            "Setiap kali liat kamu berusaha keras, rasanya aku makin jatuh cinta. Bangga banget punya pacar kayak kamu.",
-            "Cuma mau ngingetin: aku bangga sama kamu kemarin, hari ini, dan besok. Terus semangat ya, sayang.",
-            "Ndak semua orang bisa sekuat kamu ngadepin ini semua. Makasih ya udah bertahan. Aku bangga!",
-            "Kalau hari ini belum ada yang bilang, biar aku yang bilang: Kamu luar biasa, dan aku bangga banget sama kamu.",
-            "Kucing-kucing itu mungkin tidak tahu, tapi mereka beruntung bertemu kamu.",
-            "Aku suka bagaimana kamu tetap meluangkan perhatian untuk makhluk kecil yang sering diabaikan orang lain.",
-            "Aku rasa kucing-kucing itu tahu bahwa mereka aman di dekatmu.",
-            "Kadang aku suka iri deh sama kucing di sana yang bisa kamu elus-elus tiap hari, padahal aku yang pacarnya aja ndakbisa.",
-            "I hope the kindness you give to others always finds its way back to you.",
-            "I hope the world treats you as kindly as you treat everyone around you.",
-            "Kalo kamu ngerasa dunia lagi ga berpihak kepadamu, ingat bumi teh buleudd.",
-            "Semangat pusrengnya nanti, inget cara aku ngeclutch di apart school.",
-            "Semangat gendong squadnya nanti sayang, apa yang udah dipelajari dari kuch terapkan ya!",
-            "Semoga malammu tenang, mimpinya indah.",
-            "Minum air putih yang banyak sayang, jangan keseringan kopi loh ya! 🫵🏽😠",
-            "Have a great day, semangat kerjanya sayang!",
-            "I know you're working hard. Don't forget to be kind to yourself too.",
-            "I'm proud of the effort you put in every day, even when nobody notices.",
-            "I believe in you, especially on the days you doubt yourself.",
-            "Wishing you a productive day and a peaceful mind.",
-            "I hope today brings you small wins and big smiles.",
-            "No matter how today goes, I'll still be proud of you.",
-            "I'm cheering for you from afar.",
-            "Work hard, but don't forget to take care of yourself for me.",
-            "I hope today is kind to you.",
-            "Remember that your worth is not measured by your productivity.",
-            "I hope your work today feels a little easier knowing someone is rooting for you.",
-            "I hope you give yourself the same kindness you give to everyone else.",
-            "Ada sebagian hatiku yang sekarang tinggal di Bandung, nemenin kamu.",
-            "Sayang nanti kita foto bareng di tembok kata-kata. gkmautau.",
-            "Semoga perjalananmu hari ini lancar dan hati kamu tetap ringan.",
-            "Semoga tidurmu nyenyak dan besok jadi hari yang lebih baik.",
-            "Kalau hari ini berat, semoga malam ini bisa jadi tempat kamu pulang dan tenang.",
-            "Aku kangen main bareng sama kamu. Kangen main roblox, main pabji, main uno yang aku jago terus itu.",
-            "Bandung beruntung punya kamu.",
-            "Sending you real tight hug from here."
+            // --- KUMPULAN TEKS ---
+            { type: 'text', text: "Aku kangen kamu hari ini." },
+            { type: 'text', text: "Semangat ya hari ini! You got this jagoaaan." },
+            { type: 'text', text: "Jangan lupa makan yang bener, aku ndak mau kamu sakit." },
+            { type: 'text', text: "Suara tawa kamu itu hal favorit aku di dunia." },
+            { type: 'text', text: "Semoga mimpi indah ya nanti malam, Sayang." },
+            { type: 'text', text: "Aku selalu bangga punya kamu." },
+            { type: 'text', text: "Inget ya, aku di sini selalu dukung kamu." },
+            { type: 'text', text: "Setiap detik tanpamu terasa sangat lama." },
+            { type: 'text', text: "Aku udah siapin banyak pelukan saat kita ketemu nanti." },
+            { type: 'text', text: "Your laugh unforgettable" },
+            { type: 'text', text: "I miss ur voices bb" },
+            { type: 'text', text: "Semoga hari ini kamu ciken banyaaak" },
+            { type: 'text', text: "Semangat selalu, Jagoanku" },
+            { type: 'text', text: "Aku sayang kamu dan olip dan una dan obi dan cimeng dan japrem" },
+            { type: 'text', text: "Olip lagi apa sayang?" },
+            { type: 'text', text: "Nanti kita keliling dunia ya" },
+            { type: 'text', text: "Makan apa hari ini sayang" },
+            { type: 'text', text: "Jangan lupa makan enak yaaa" },
+            { type: 'text', text: "Don't push urself, remember u need to rest okay?" },
+            { type: 'text', text: "The moon always reminds me of u" },
+            { type: 'text', text: "I tell the moon I missed u" },
+            { type: 'text', text: "Atleast we still under the same sky" },
+            { type: 'text', text: "I love you more than words know how to say" },
+            { type: 'text', text: "Bicara denganmu selalu menenangkan, terimakasih sayang" },
+            { type: 'text', text: "I fall for you a little more every single day" },
+            { type: 'text', text: "You have my whole heart, always." },
+            { type: 'text', text: "Bagaimana bisa kamu menganggap kamu no life, sedangkan kamu adalah my whole life 😏" },
+            { type: 'text', text: "You're the kind of person my soul feels calm around." },
+            { type: 'text', text: "I love you in every universeeee" },
+            { type: 'text', text: "Sayang aku kangen olip" },
+            { type: 'text', text: "Kalau kangen, lihat langit ya. Kita ada di bawah langit yang sama." },
+            { type: 'text', text: "Ping pabji boleh ngelag, tapi ping cintaku ke kamu tetep 1ms 😏" },
+            { type: 'text', text: "Coba senyum bentar deh natep layar HP-nya... nah gitu dong, kan kelihatan cantiknya sampai sini" },
+            { type: 'text', text: "Disini gada dimsum mentai, Sayang." },
+            { type: 'text', text: "Dari semua kucing yang pernah aku elus, cuma kamu yang paling gemesin hhhhhhhh" },
+            { type: 'text', text: "Semangat terus, moal baleeeeg, basreng anyiiingg!" },
+            { type: 'text', text: "Kalau hari ini terasa berat, ingat ada seseorang yang sangat mencintaimu." },
+            { type: 'text', text: "Bapak sama ibu diatas bangga sama kamu sudah berjuang sejauh ini." },
+            { type: 'text', text: "Aku selalu tersenyum setiap kali mengingat kamu, apalagi kalo ingat kamu ngomong janc....." },
+            { type: 'text', text: "Selamat pagi cantik, semoga hari ini memihak padamu." },
+            { type: 'text', text: "Sayangku, cintaku, duniaku, semestaku... jangan lupa makan ya!" },
+            { type: 'text', text: "Semoga hari ini ada banyak alasan untuk tersenyum." },
+            { type: 'text', text: "Satu langkah kecil hari ini tetap lebih baik daripada tidak melangkah sama sekali." },
+            { type: 'text', text: "Semoga semua hal baik menemukan jalan menuju kamu hari ini." },
+            { type: 'text', text: "Terimakasih selalu menjadi orang baik sayang" },
+            { type: 'text', text: "Jangan terlalu keras pada dirimu sendiri." },
+            { type: 'text', text: "Kamu sudah melakukan yang terbaik hari ini." },
+            { type: 'text', text: "Jangan lupa minum air, tanaman saja disiram masa pacarku ndak." },
+            { type: 'text', text: "Sayang selama ini ada yg aku resahin, aku mau protes, kenapa kamu bisa secantik itu?" },
+            { type: 'text', text: "Aku udah cek ramalan cuaca, hari ini kemungkinan besar kamu tetap menggemaskan." },
+            { type: 'text', text: "Jangan lupa makan, cantik ndak dipakai sebagai sumber energi." },
+            { type: 'text', text: "Kamu sudah melewati banyak hal sulit sebelumnya." },
+            { type: 'text', text: "Cara kamu memperlakukan orang lain selalu membuatku kagum." },
+            { type: 'text', text: "Aku menghargai semua usaha kecil yang mungkin tidak disadari orang lain." },
+            { type: 'text', text: "Kamu punya hati yang baik, jangan pernah meragukannya." },
+            { type: 'text', text: "Kehadiranmu membuat hidupku lebih berwarna, aku bersyukur bisa mengenalmu." },
+            { type: 'text', text: "Pagi! Jangan lupa minum air putih, tarik napas, dan ingat kalau aku sayang kamu." },
+            { type: 'text', text: "Bangun sayang, dunia butuh senyum manismu hari ini. Semangat!" },
+            { type: 'text', text: "Hari ini pasti capek banget ya? Sekarang waktunya log out dari urusan dunia dan istirahat. Good night, sayang." },
+            { type: 'text', text: "Udah malem, matikan layarnya dan jangan begadang terus. Tidur ya, biar besok tetep jagoan terus." },
+            { type: 'text', text: "Sleep well, cintaku. Semoga di mimpimu malam ini kita bisa jalan berdua cari makan enak." },
+            { type: 'text', text: "Jangan lupa berdoa sebelum tidur. Semoga besok lebih baik dari hari ini. Night, love." },
+            { type: 'text', text: "Hari ini mungkin berat, tapi aku tahu kamu jauh lebih kuat dari apa pun yang kamu hadapin hari ini." },
+            { type: 'text', text: "Gapapa nangis atau ngeluh sebentar. Tumpahin aja semuanya ke aku. Setelah itu kita bangkit lagi, ya." },
+            { type: 'text', text: "Kamu boleh capek, kamu boleh sedih, tapi kamu nggak boleh nyerah. Aku tahu kamu pasti bisa." },
+            { type: 'text', text: "Aku tahu belakangan ini berat banget buat kamu, but look at you, kamu bisa lewatin semuanya. Aku bangga banget sama kamu!" },
+            { type: 'text', text: "Setiap kali liat kamu berusaha keras, rasanya aku makin jatuh cinta. Bangga banget punya pacar kayak kamu." },
+            { type: 'text', text: "Cuma mau ngingetin: aku bangga sama kamu kemarin, hari ini, dan besok. Terus semangat ya, sayang." },
+            { type: 'text', text: "Ndak semua orang bisa sekuat kamu ngadepin ini semua. Makasih ya udah bertahan. Aku bangga!" },
+            { type: 'text', text: "Kalau hari ini belum ada yang bilang, biar aku yang bilang: Kamu luar biasa, dan aku bangga banget sama kamu." },
+            { type: 'text', text: "Kucing-kucing itu mungkin tidak tahu, tapi mereka beruntung bertemu kamu." },
+            { type: 'text', text: "Aku suka bagaimana kamu tetap meluangkan perhatian untuk makhluk kecil yang sering diabaikan orang lain." },
+            { type: 'text', text: "Aku rasa kucing-kucing itu tahu bahwa mereka aman di dekatmu." },
+            { type: 'text', text: "Kadang aku suka iri deh sama kucing di sana yang bisa kamu elus-elus tiap hari, padahal aku yang pacarnya aja ndakbisa." },
+            { type: 'text', text: "I hope the kindness you give to others always finds its way back to you." },
+            { type: 'text', text: "I hope the world treats you as kindly as you treat everyone around you." },
+            { type: 'text', text: "Kalo kamu ngerasa dunia lagi ga berpihak kepadamu, ingat bumi teh buleudd." },
+            { type: 'text', text: "Semangat pusrengnya nanti, inget cara aku ngeclutch di apart school." },
+            { type: 'text', text: "Semangat gendong squadnya nanti sayang, apa yang udah dipelajari dari kuch terapkan ya!" },
+            { type: 'text', text: "Semoga malammu tenang, mimpinya indah." },
+            { type: 'text', text: "Minum air putih yang banyak sayang, jangan keseringan kopi loh ya! 🫵🏽😠" },
+            { type: 'text', text: "Have a great day, semangat kerjanya sayang!" },
+            { type: 'text', text: "I know you're working hard. Don't forget to be kind to yourself too." },
+            { type: 'text', text: "I'm proud of the effort you put in every day, even when nobody notices." },
+            { type: 'text', text: "I believe in you, especially on the days you doubt yourself." },
+            { type: 'text', text: "Wishing you a productive day and a peaceful mind." },
+            { type: 'text', text: "I hope today brings you small wins and big smiles." },
+            { type: 'text', text: "No matter how today goes, I'll still be proud of you." },
+            { type: 'text', text: "I'm cheering for you from afar." },
+            { type: 'text', text: "Work hard, but don't forget to take care of yourself for me." },
+            { type: 'text', text: "I hope today is kind to you." },
+            { type: 'text', text: "Remember that your worth is not measured by your productivity." },
+            { type: 'text', text: "I hope your work today feels a little easier knowing someone is rooting for you." },
+            { type: 'text', text: "I hope you give yourself the same kindness you give to everyone else." },
+            { type: 'text', text: "Ada sebagian hatiku yang sekarang tinggal di Bandung, nemenin kamu." },
+            { type: 'text', text: "Sayang nanti kita foto bareng di tembok kata-kata. gkmautau." },
+            { type: 'text', text: "Semoga perjalananmu hari ini lancar dan hati kamu tetap ringan." },
+            { type: 'text', text: "Semoga tidurmu nyenyak dan besok jadi hari yang lebih baik." },
+            { type: 'text', text: "Kalau hari ini berat, semoga malam ini bisa jadi tempat kamu pulang dan tenang." },
+            { type: 'text', text: "Aku kangen main bareng sama kamu. Kangen main roblox, main pabji, main uno yang aku jago terus itu." },
+            { type: 'text', text: "Bandung beruntung punya kamu." },
+            { type: 'text', text: "Sending you real tight hug from here." },
+            { type: 'text', text: "Makan yang teratur sayang, kasian peyutnya." },
+            { type: 'text', text: "Jagoan pisaaaaaaan." },
+            { type: 'text', text: "Semoga hari ini dan seterusnya tetep jagoan." },
+            { type: 'text', text: "Jagoan aku ndakboleh menyerah." },
+            
+            // --- KUMPULAN LAGU ---
+            { type: 'song', artist: "Sal Priadi", title: "Mesra-mesraannya kecil-kecilan dulu" },
+            { type: 'song', artist: "Sal Priadi", title: "Ada titik-titik di ujung doa" },
+            { type: 'song', artist: "Sal Priadi", title: "Besok kita pergi makan" },
+            { type: 'song', artist: "Sal Priadi", title: "Semua lagu cinta" },
+            { type: 'song', artist: "Sal Priadi", title: "I'd like to watch you sleeping" },
+            { type: 'song', artist: "Sal Priadi", title: "Hi, selamat pagiii" },
+            { type: 'song', artist: "Reality Club", title: "Anything You Want" },
+            { type: 'song', artist: "Reality Club", title: "Alexandra" },
+            { type: 'song', artist: "Reality Club", title: "Am I Bothering You?" },
+            { type: 'song', artist: "Arctic Monkeys", title: "I Wanna Be Yours" },
+            { type: 'song', artist: "Arctic Monkeys", title: "R U Mine?" },
+            { type: 'song', artist: "Arctic Monkeys", title: "Mardy Bum" },
+            { type: 'song', artist: "Arctic Monkeys", title: "Baby I'm Yours" },
+            { type: 'song', artist: "Coldplay", title: "Amazing Day" },
+            { type: 'song', artist: "Rex Orange County", title: "Happiness" },
+            { type: 'song', artist: "Daniel Caesar, Rex Orange County", title: "Rearrange My World" },
+            { type: 'song', artist: "Rex Orange County", title: "Sunflower" },
+            { type: 'song', artist: "Rex Orange County", title: "ONE IN A MILLION" },
+            { type: 'song', artist: "Daniel Caesar", title: "Best Part" },
+            { type: 'song', artist: "Daniel Caesar", title: "Superpowers" },
+            { type: 'song', artist: "Daniel Caesar", title: "Blessed" },
+            { type: 'song', artist: "Daniel Caesar", title: "Moon" },
+            { type: 'song', artist: "Frank Ocean", title: "Godspeed" }
         ];
 
         let pertamaKaliKlik = true;
@@ -345,6 +399,54 @@
             if (video && video.paused) video.play().catch(e => console.log(e));
         }
 
+        // --- FUNGSI BARU KHUSUS UNTUK TOMBOL PLAY/PAUSE LAGU ---
+        function toggleMusic(e) {
+            e.stopPropagation(); // Mencegah double tap background terpicu
+            const musik = document.getElementById('bg-music');
+            const btn = document.getElementById('play-btn-icon');
+            const moonBg = document.getElementById('moon-bg');
+
+            if (musik.paused) {
+                musik.play();
+                btn.innerText = '⏸️';
+                moonBg.classList.add('spinning');
+            } else {
+                musik.pause();
+                btn.innerText = '▶️';
+                moonBg.classList.remove('spinning');
+            }
+        }
+
+        // --- FUNGSI RENDER TAMPILAN PESAN/LAGU ---
+        function renderPesan(dataObj) {
+            const messageElement = document.getElementById('message');
+            const moonBg = document.getElementById('moon-bg');
+            const musik = document.getElementById('bg-music');
+
+            if (dataObj.type === 'song') {
+                // Jika data adalah lagu
+                const isPlaying = musik && !musik.paused;
+                const icon = isPlaying ? '⏸️' : '▶️';
+                
+                // Putar bulan jika lagu sedang berjalan
+                if (isPlaying) {
+                    moonBg.classList.add('spinning');
+                } else {
+                    moonBg.classList.remove('spinning');
+                }
+
+                messageElement.innerHTML = `
+                    <div style="font-size: 0.8em; color: #ffeb3b; letter-spacing: 1px; text-transform: uppercase;">🎵 ${dataObj.artist}</div>
+                    <div style="font-size: 1.2em; font-weight: bold; margin: 15px 0;">${dataObj.title}</div>
+                    <div class="play-btn" onclick="toggleMusic(event)" id="play-btn-icon">${icon}</div>
+                `;
+            } else {
+                // Jika data adalah teks biasa, bungkus dengan tanda kutip dan matikan putaran bulan
+                moonBg.classList.remove('spinning');
+                messageElement.innerHTML = `"${dataObj.text}"`;
+            }
+        }
+
         function handleMoonClick() {
             clickCount++;
 
@@ -352,10 +454,8 @@
                 clickTimer = setTimeout(() => {
                     jalankanMedia(); 
                     if (pertamaKaliKlik) {
-                        const messageElement = document.getElementById('message');
-                        // Teks otomatis dibungkus dengan tanda kutip
-                        messageElement.innerText = '"' + dapatkanPesanHariIni() + '"';
-                        messageElement.style.opacity = 1;
+                        renderPesan(dapatkanPesanHariIni());
+                        document.getElementById('message').style.opacity = 1;
                         pertamaKaliKlik = false;
                     }
                     clickCount = 0; 
@@ -368,15 +468,16 @@
                 const messageElement = document.getElementById('message');
 
                 if (pertamaKaliKlik) {
-                    messageElement.innerText = '"' + dapatkanPesanHariIni() + '"';
+                    renderPesan(dapatkanPesanHariIni());
                     messageElement.style.opacity = 1;
                     pertamaKaliKlik = false;
                 } else {
                     const indexRandom = Math.floor(Math.random() * pesan.length);
                     messageElement.style.opacity = 0;
+                    
+                    // Tunggu animasi transisi hilang sebentar baru render teks baru
                     setTimeout(() => {
-                        // Teks otomatis dibungkus dengan tanda kutip
-                        messageElement.innerText = '"' + pesan[indexRandom] + '"';
+                        renderPesan(pesan[indexRandom]);
                         messageElement.style.opacity = 1;
                     }, 250);
                 }
@@ -400,12 +501,9 @@
 
         function toggleBubble(e) {
             e.stopPropagation(); 
-            
             const bubble = document.getElementById('heart-bubble');
             bubble.classList.add('show');
-            
             if (bubbleTimer) clearTimeout(bubbleTimer);
-            
             bubbleTimer = setTimeout(() => {
                 bubble.classList.remove('show');
             }, 3000);
@@ -422,14 +520,14 @@
                 bubble.classList.remove('show');
             }
 
-            if (e.target.closest('.moon-container') || e.target.closest('.heart-container')) {
+            // Batalkan jatuhan bintang jika memencet bulan, love, atau tombol play
+            if (e.target.closest('.moon-container') || e.target.closest('.heart-container') || e.target.closest('.play-btn')) {
                 return;
             }
 
             jalankanMedia();
 
             const flyingObj = document.createElement('img');
-            
             const isBubu = Math.random() < 0.20; 
             
             flyingObj.src = isBubu ? 'bubududu.png' : 'star.png';
@@ -437,7 +535,6 @@
 
             const randomY = Math.floor(Math.random() * 30) - 10;
             flyingObj.style.top = randomY + 'vh';
-            
             flyingObj.style.left = '-20vw'; 
 
             const animationDuration = (Math.random() * 1 + 1.5).toFixed(2);
