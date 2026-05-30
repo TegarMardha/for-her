@@ -44,6 +44,7 @@
             margin: 0;
             z-index: 100;
             letter-spacing: 2px;
+            pointer-events: none; /* Agar klik tembus ke background */
         }
 
         /* --- CONTAINER BULAN --- */
@@ -69,10 +70,9 @@
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             
-            /* --- PENTING UNTUK HP --- */
-            -webkit-tap-highlight-color: transparent; /* Hilangkan efek kotak biru */
-            user-select: none; /* Cegah teks/gambar terblokir saat di-tap cepat */
-            touch-action: manipulation; /* Cegah HP nge-zoom otomatis saat double tap */
+            -webkit-tap-highlight-color: transparent;
+            user-select: none; 
+            touch-action: manipulation; 
         }
 
         .moon-container:active {
@@ -106,6 +106,45 @@
             justify-content: center;
             align-items: center;
             gap: 8px; 
+            pointer-events: none; /* Agar klik tembus ke background */
+        }
+
+        /* --- CSS EFEK BINTANG / BUBU DUDU --- */
+        .falling-object {
+            position: absolute;
+            z-index: 5; /* Berada di antara background dan bulan */
+            pointer-events: none; /* Agar tidak menghalangi klik lainnya */
+            animation: fallDiagonal linear forwards;
+        }
+
+        /* Ukuran Bintang */
+        .star-img {
+            width: 150px; 
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
+        }
+
+        /* Ukuran Bubu Dudu */
+        .bubu-img {
+            width: 120px; 
+            filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+        }
+
+        /* Animasi meluncur dari kiri atas ke kanan bawah */
+        @keyframes fallDiagonal {
+            0% {
+                transform: translate(0, 0) scale(0.8);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(120vw, 120vh) scale(1);
+                opacity: 0;
+            }
         }
     </style>
 </head>
@@ -129,6 +168,7 @@
     </audio>
 
     <script>
+        // --- DATA DAN LOGIKA BULAN (Sama seperti sebelumnya) ---
         const pesan = [
             "Aku kangen kamu hari ini.",
             "Jarak cuma angka, perasaanku ke kamu nyata.",
@@ -157,7 +197,6 @@
             return pesan[indexHariIni];
         }
 
-        // Fungsi khusus untuk menyalakan lagu dan video
         function jalankanMedia() {
             const musik = document.getElementById('bg-music');
             const video = document.getElementById('bg-video');
@@ -169,35 +208,28 @@
             clickCount++;
 
             if (clickCount === 1) {
-                // Tunggu 300 milidetik untuk memastikan apakah ini single tap atau double tap
                 clickTimer = setTimeout(() => {
-                    jalankanMedia(); // Play musik/video
-
+                    jalankanMedia(); 
                     if (pertamaKaliKlik) {
-                        // Jika web baru dibuka, tap 1x langsung memunculkan pesan hari ini
                         const messageElement = document.getElementById('message');
                         messageElement.innerText = dapatkanPesanHariIni();
                         messageElement.style.opacity = 1;
                         pertamaKaliKlik = false;
                     }
-                    
-                    clickCount = 0; // Reset hitungan tap
+                    clickCount = 0; 
                 }, 300); 
 
             } else if (clickCount === 2) {
-                // --- LOGIKA DOUBLE TAP (SKIP PESAN) ---
-                clearTimeout(clickTimer); // Batalkan timer single tap
+                clearTimeout(clickTimer); 
                 jalankanMedia(); 
 
                 const messageElement = document.getElementById('message');
 
                 if (pertamaKaliKlik) {
-                    // Berjaga-jaga jika dia langsung double tap saat web baru dibuka
                     messageElement.innerText = dapatkanPesanHariIni();
                     messageElement.style.opacity = 1;
                     pertamaKaliKlik = false;
                 } else {
-                    // Ganti (skip) pesan dengan animasi transisi
                     const indexRandom = Math.floor(Math.random() * pesan.length);
                     messageElement.style.opacity = 0;
                     setTimeout(() => {
@@ -205,8 +237,7 @@
                         messageElement.style.opacity = 1;
                     }, 250);
                 }
-
-                clickCount = 0; // Reset hitungan tap setelah double tap berhasil
+                clickCount = 0; 
             }
         }
 
@@ -215,7 +246,6 @@
             const hariMulaiNilai = 129; 
             
             const hariIni = new Date();
-            
             tanggalMulai.setHours(0,0,0,0);
             hariIni.setHours(0,0,0,0);
             
@@ -228,6 +258,46 @@
         window.onload = function() {
             hitungHari();
         };
+
+        // --- LOGIKA BARU: INTERAKSI BACKGROUND (BINTANG JATUH / BUBU DUDU) ---
+        document.body.addEventListener('click', function(e) {
+            // Cegah fungsi ini berjalan kalau yang ditekan adalah si Bulan (moon-container)
+            if (e.target.closest('.moon-container')) {
+                return;
+            }
+
+            // Putar media jika disentuh lewat background pertama kali
+            jalankanMedia();
+
+            // Membuat elemen gambar baru secara dinamis
+            const flyingObj = document.createElement('img');
+            
+            // Randomizer probabilitas: 20% (0.0 sampai 0.2) untuk Bubu Dudu, sisanya Star
+            const isBubu = Math.random() < 0.20; 
+            
+            // Set sumber gambar dan class CSS-nya
+            flyingObj.src = isBubu ? 'bubududu.png' : 'star.png';
+            flyingObj.className = 'falling-object ' + (isBubu ? 'bubu-img' : 'star-img');
+
+            // Set posisi mulai secara random di sumbu Y (dari ketinggian -10vh (atas) sampai 60vh (bawah))
+            const randomY = Math.floor(Math.random() * 70) - 10;
+            flyingObj.style.top = randomY + 'vh';
+            
+            // Mulai dari kiri layar (-20vw)
+            flyingObj.style.left = '-20vw'; 
+
+            // Tambahkan variasi kecepatan animasi biar natural (antara 1.5 detik sampai 2.5 detik)
+            const animationDuration = (Math.random() * 1 + 1.5).toFixed(2);
+            flyingObj.style.animationDuration = animationDuration + 's';
+
+            // Memasukkan gambar ke dalam body layar
+            document.body.appendChild(flyingObj);
+
+            // Menghapus elemen gambar dari memori setelah animasinya selesai
+            setTimeout(() => {
+                flyingObj.remove();
+            }, animationDuration * 1000);
+        });
     </script>
 </body>
 </html>
